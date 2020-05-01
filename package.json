@@ -1,0 +1,18 @@
+{
+  "manver" : "1",
+  "project" : "",
+  "description" : "",
+  "version" : "0.0.1",
+  "license" : "Apache 2.0",
+  "author" : "",
+  "source" : [
+    "src/source.kl"
+  ],
+  "includes" : [
+    "include"
+  ],
+  "depends" : [
+  ],
+  "external_paths" : [
+  ]
+}

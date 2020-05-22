@@ -1,9 +1,0 @@
-PROGRAM source
-%NOLOCKGROUP
-
-%INCLUDE source.klt
-
-%INCLUDE source.klh
-
-BEGIN
-END source

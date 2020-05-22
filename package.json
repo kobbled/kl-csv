@@ -1,18 +1,20 @@
 {
   "manver" : "1",
-  "project" : "",
+  "project" : "csv",
   "description" : "",
   "version" : "0.0.1",
-  "license" : "Apache 2.0",
-  "author" : "",
+  "license" : "MIT",
+  "author" : "Kobbled",
   "source" : [
-    "src/source.kl"
+    "src/csv.kl"
   ],
   "includes" : [
     "include"
   ],
   "depends" : [
-  ],
-  "external_paths" : [
+    "files",
+    "errors",
+    "Strings",
+    "ktransw-macros"
   ]
 }

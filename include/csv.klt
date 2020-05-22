@@ -1,0 +1,18 @@
+%ifndef csv_t
+%define csv_t
+
+%define CSV_MAX_COLUMNS 12
+%define CSV_CELL_LENGTH 16
+
+
+%define CARTESIAN_HEADER 'x,y,z'
+%define CYLINDRICAL_HEADER 'theta,z,r'
+%define POSITION_HEADER 'x,y,z,w,p,r'
+
+VAR
+  fieldnames : ARRAY[CSV_MAX_COLUMNS] OF STRING[CSV_CELL_LENGTH]
+  delimeter : STRING[1]
+  columns : INTEGER
+
+
+%endif --csv_t

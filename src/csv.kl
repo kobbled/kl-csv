@@ -1,0 +1,133 @@
+PROGRAM csv
+%NOLOCKGROUP
+
+%include errors.klt
+%include csv.klt
+
+%include errors.klh
+%include strings.klh
+%include files.klh
+%include csv.private.klh
+%include csv.klh
+
+ROUTINE csv__create
+  BEGIN
+    --set delimeter
+    csv__set_delimeter(delim)
+    --set fieldnames
+    csv__set_fieldnames(header)
+    --open csv to write header
+    files__open(file_name, 'RW', csv_fl)
+
+    --write fieldnames
+    csv__write_fieldnames(file_name, csv_fl)
+    
+    files__close(file_name, csv_fl)
+  END csv__create
+
+ROUTINE csv__write_string
+  VAR
+    i : INTEGER
+    s : STRING[254]
+  BEGIN
+    IF ARRAY_LEN(row) > columns THEN
+      karelError('row is larger than number of columns in csv file', ER_WARN_STP)
+    ENDIF
+
+    s = ''
+    FOR i=1 TO columns DO
+      IF UNINIT(row[i]) THEN karelError('uninitialized data in col: ' + i_to_s(i) +  & 
+                                        ' passed to csv file', ER_ABORT) ; ENDIF
+      s = s + row[i]
+      IF i < columns THEN
+        s = s + delimeter
+      ENDIF
+    ENDFOR
+
+    -- write to pipe
+    OPEN FILE fl ('AP', file_name)
+
+    WRITE fl(s)
+    IF (s <> '') THEN
+      WRITE fl(CR)
+    ENDIF
+
+    CLOSE FILE fl
+
+  END csv__write_string
+
+ROUTINE csv__write_fieldnames
+  BEGIN
+    -- write header
+    csv__write_string(file_name, csv_fl, fieldnames)
+  END csv__write_fieldnames
+
+ROUTINE csv__write_row_val
+  VAR
+    i : INTEGER
+    row_s : ARRAY[CSV_MAX_COLUMNS] OF STRING[CSV_CELL_LENGTH]
+  BEGIN
+    IF ARRAY_LEN(row) > ARRAY_LEN(row_s) THEN
+      karelError('real row is greater than max csv columns, ' + i_to_s(CSV_MAX_COLUMNS), ER_ABORT)
+    ENDIF
+
+    FOR i=1 TO ARRAY_LEN(row) DO
+      row_s[i] = r_to_s(row[i])
+    ENDFOR
+
+    csv__write_string(file_name, csv_fl, row_s)
+  END csv__write_row_val
+
+ROUTINE csv__write_row_string
+  BEGIN
+    csv__write_string(file_name, csv_fl, row)
+  END csv__write_row_string
+
+ROUTINE csv__write_row_vector
+  VAR
+    row_s : ARRAY[3] OF STRING[CSV_CELL_LENGTH]
+  BEGIN
+    row_s[1] = r_to_s(row.x) 
+    row_s[2] = r_to_s(row.y)
+    row_s[3] = r_to_s(row.z)
+    csv__write_string(file_name, csv_fl, row_s)
+  END csv__write_row_vector
+
+
+ROUTINE csv__set_delimeter
+  BEGIN
+    IF STR_LEN(delim) > 1 THEN karelError('csv delimeter must be a single char', ER_ABORT) ; ENDIF
+    delim_check(delim)
+
+    delimeter = delim
+  END csv__set_delimeter
+
+ROUTINE csv__set_fieldnames
+  VAR
+    i : INTEGER
+    c : INTEGER
+  BEGIN
+    --clear fieldnames
+    csv__clear_fieldnames
+    --split header against delimeter
+    split_str(header, delimeter, fieldnames)
+    --tally columns
+    c = 0
+    FOR i=1 TO ARRAY_LEN(fieldnames) DO
+      IF fieldnames[i] <> '' THEN c = c + 1 ; ENDIF
+    ENDFOR
+
+    columns = c
+  END csv__set_fieldnames
+
+ROUTINE csv__clear_fieldnames
+  VAR
+    i : INTEGER
+  BEGIN
+    FOR i=1 TO ARRAY_LEN(fieldnames) DO 
+      fieldnames[i] = ''
+    ENDFOR
+  END csv__clear_fieldnames
+
+BEGIN
+END csv

@@ -1,0 +1,13 @@
+%ifndef csv_private_h
+%define csv_private_h
+
+%include namespace.m
+
+%define prog_name csv
+%define prog_name_alias csv
+
+-- namespaced members in format <prog_name_alias>__<func_name>
+declare(prog_name,write_string,prog_name_alias,rwstring)
+
+ROUTINE csv__write_string(file_name : STRING ; fl : FILE; row : ARRAY[*] OF STRING) FROM csv
+%endif --csv_private_h

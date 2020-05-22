@@ -1,0 +1,27 @@
+%ifndef csv_h
+%define csv_h
+
+%include namespace.m
+
+%define prog_name csv
+%define prog_name_alias csv
+
+-- namespaced members in format <prog_name_alias>__<func_name>
+declare(prog_name,create,prog_name_alias,create)
+declare(prog_name,write_fieldnames,prog_name_alias,rwfield)
+declare(prog_name,write_row_val,prog_name_alias,rowvals)
+declare(prog_name,write_row_string,prog_name_alias,rowstr)
+declare(prog_name,write_row_vector,prog_name_alias,rowvec)
+declare(prog_name,set_delimeter,prog_name_alias,setdelim)
+declare(prog_name,set_fieldnames,prog_name_alias,setfield)
+declare(prog_name,clear_fieldnames,prog_name_alias,clrfield)
+
+ROUTINE csv__create(file_name : STRING ; csv_fl : FILE ; delim : STRING ; header : STRING) FROM csv
+ROUTINE csv__write_fieldnames(file_name : STRING ; csv_fl : FILE) FROM csv
+ROUTINE csv__write_row_val(file_name : STRING ; csv_fl : FILE; row : ARRAY[*] OF REAL) FROM csv
+ROUTINE csv__write_row_string(file_name : STRING ; csv_fl : FILE; row : ARRAY[*] OF STRING) FROM csv
+ROUTINE csv__write_row_vector(file_name : STRING ; csv_fl : FILE; row : VECTOR) FROM csv
+ROUTINE csv__set_delimeter(delim : STRING) FROM csv
+ROUTINE csv__set_fieldnames(header : STRING) FROM csv
+ROUTINE csv__clear_fieldnames FROM csv
+%endif --csv_h

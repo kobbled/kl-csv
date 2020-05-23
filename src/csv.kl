@@ -129,5 +129,53 @@ ROUTINE csv__clear_fieldnames
     ENDFOR
   END csv__clear_fieldnames
 
+ROUTINE csv__read_pipe
+  VAR
+    str : STRING[127]
+  BEGIN
+    -- force wait until data is available
+    SET_FILE_ATR(pip, ATR_PIPWAIT, WAIT_USED)
+    --open pipe
+    OPEN FILE pip ('RO', file_name)
+    --read data once available
+    READ pip (str)
+    --close pipe
+    CLOSE FILE pip
+
+    RETURN(str)
+
+  END csv__read_pipe
+
+ROUTINE csv__read_pipe_rarr
+  BEGIN
+    IF (UNINIT(delimeter)) OR (delimeter = '') THEN
+      karelError('delimeter not set before read operation', ER_ABORT)
+    ENDIF
+
+    --read line and output as real array
+    s_to_rarr(csv__read_pipe(file_name, pip), delimeter, out_arr)
+
+  END csv__read_pipe_rarr
+
+ROUTINE csv__read_pipe_vector
+  BEGIN
+    IF (UNINIT(delimeter)) OR (delimeter = '') THEN
+      karelError('delimeter not set before read operation', ER_ABORT)
+    ENDIF
+
+    --read line and output as vector
+    RETURN(s_to_vec(csv__read_pipe(file_name, pip), delimeter))
+  END csv__read_pipe_vector
+
+ROUTINE csv__read_pipe_xyzwpr
+  BEGIN
+    IF (UNINIT(delimeter)) OR (delimeter = '') THEN
+      karelError('delimeter not set before read operation', ER_ABORT)
+    ENDIF
+    
+    --read line and output as vector
+    RETURN(s_to_xyzwpr(csv__read_pipe(file_name, pip), delimeter))
+  END csv__read_pipe_xyzwpr
+
 BEGIN
 END csv

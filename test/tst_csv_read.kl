@@ -1,0 +1,46 @@
+PROGRAM tst_csv_read
+%NOLOCKGROUP
+
+VAR
+  pip_sema FROM tst_csv_main : INTEGER
+  pipe_file FROM tst_csv_main : STRING[16]
+  waitime FROM tst_csv_main : INTEGER
+  read_fl : FILE
+  str : STRING[127]
+  time_out : BOOLEAN
+
+%include errors.klt
+%include display.c.klt
+
+%include errors.klh
+%include csv.klh
+%include display.klh
+
+BEGIN
+
+  display__set_severity(INFO)
+  display__show_date(FALSE)
+
+  --show display
+  display__show
+
+  --start read
+  csv__read_open(pipe_file, read_fl)
+
+  WHILE(TRUE) DO
+    --wait for data available in pipe
+    PEND_SEMA(pip_sema, waitime, time_out)
+    IF time_out THEN
+      GOTO ENDREAD
+    ENDIF
+    --read when data is available in pipe
+    str = csv__read_pipe(read_fl)
+    --and print to TPDISPLAY
+    display__set_message(str)
+    display__print
+  ENDWHILE
+
+  ENDREAD::
+  --close file
+  csv__read_close(read_fl)
+END tst_csv_read

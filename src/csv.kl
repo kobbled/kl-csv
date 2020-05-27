@@ -16,13 +16,9 @@ ROUTINE csv__create
     csv__set_delimeter(delim)
     --set fieldnames
     csv__set_fieldnames(header)
-    --open csv to write header
-    files__open(file_name, 'RW', csv_fl)
-
     --write fieldnames
     csv__write_fieldnames(file_name, csv_fl)
     
-    files__close(file_name, csv_fl)
   END csv__create
 
 ROUTINE csv__write_string
@@ -31,7 +27,8 @@ ROUTINE csv__write_string
     s : STRING[254]
   BEGIN
     IF ARRAY_LEN(row) > columns THEN
-      karelError('row is larger than number of columns in csv file', ER_WARN_STP)
+      karelError('row length ' + i_to_s(ARRAY_LEN(row)) + ' is larger than number '+ CHR(13) + &
+                  'of columns '+ i_to_s(columns) + ' in csv file', ER_WARN_STP)
     ENDIF
 
     s = ''
@@ -57,9 +54,29 @@ ROUTINE csv__write_string
   END csv__write_string
 
 ROUTINE csv__write_fieldnames
+  VAR
+    i : INTEGER
+    s : STRING[254]
   BEGIN
     -- write header
-    csv__write_string(file_name, csv_fl, fieldnames)
+    s = ''
+    FOR i=1 TO columns DO
+      s = s + fieldnames[i]
+      IF i < columns THEN
+        s = s + delimeter
+      ENDIF
+    ENDFOR
+
+    --open csv to write header
+    files__open(file_name, 'RW', csv_fl)
+
+    WRITE csv_fl(s)
+    IF (s <> '') THEN
+      WRITE csv_fl(CR)
+    ENDIF
+
+    files__close(file_name, csv_fl)
+
   END csv__write_fieldnames
 
 ROUTINE csv__write_row_val
@@ -92,6 +109,19 @@ ROUTINE csv__write_row_vector
     row_s[3] = r_to_s(row.z)
     csv__write_string(file_name, csv_fl, row_s)
   END csv__write_row_vector
+
+ROUTINE csv__write_row_xyzwpr
+  VAR
+    row_s : ARRAY[6] OF STRING[CSV_CELL_LENGTH]
+  BEGIN
+    row_s[1] = r_to_s(row.x) 
+    row_s[2] = r_to_s(row.y)
+    row_s[3] = r_to_s(row.z)
+    row_s[4] = r_to_s(row.w) 
+    row_s[5] = r_to_s(row.p)
+    row_s[6] = r_to_s(row.r)
+    csv__write_string(file_name, csv_fl, row_s)
+  END csv__write_row_xyzwpr
 
 
 ROUTINE csv__set_delimeter
@@ -129,18 +159,36 @@ ROUTINE csv__clear_fieldnames
     ENDFOR
   END csv__clear_fieldnames
 
+
+ROUTINE csv__read_open
+  BEGIN
+    --open pipe
+    OPEN FILE pip ('RO', file_name)
+  END csv__read_open
+
+ROUTINE csv__read_close
+  BEGIN
+    --close pipe
+    CLOSE FILE pip
+  END csv__read_close
+
 ROUTINE csv__read_pipe
   VAR
     str : STRING[127]
+    buf, status : INTEGER
   BEGIN
-    -- force wait until data is available
-    SET_FILE_ATR(pip, ATR_PIPWAIT, WAIT_USED)
-    --open pipe
-    OPEN FILE pip ('RO', file_name)
-    --read data once available
-    READ pip (str)
-    --close pipe
-    CLOSE FILE pip
+    --see if there is still data to read
+    BYTES_AHEAD(pip, buf, status)
+
+    --close file if BYTES_AHEAD fails
+    IF status <> 0 THEN
+      csv__read_close(pip)
+    ENDIF
+
+    IF buf > 0 THEN
+      --read line
+      READ pip (str)
+    ENDIF
 
     RETURN(str)
 
@@ -153,7 +201,7 @@ ROUTINE csv__read_pipe_rarr
     ENDIF
 
     --read line and output as real array
-    s_to_rarr(csv__read_pipe(file_name, pip), delimeter, out_arr)
+    s_to_rarr(csv__read_pipe(pip), delimeter, out_arr)
 
   END csv__read_pipe_rarr
 
@@ -164,7 +212,7 @@ ROUTINE csv__read_pipe_vector
     ENDIF
 
     --read line and output as vector
-    RETURN(s_to_vec(csv__read_pipe(file_name, pip), delimeter))
+    RETURN(s_to_vec(csv__read_pipe(pip), delimeter))
   END csv__read_pipe_vector
 
 ROUTINE csv__read_pipe_xyzwpr
@@ -174,7 +222,7 @@ ROUTINE csv__read_pipe_xyzwpr
     ENDIF
     
     --read line and output as vector
-    RETURN(s_to_xyzwpr(csv__read_pipe(file_name, pip), delimeter))
+    RETURN(s_to_xyzwpr(csv__read_pipe(pip), delimeter))
   END csv__read_pipe_xyzwpr
 
 BEGIN

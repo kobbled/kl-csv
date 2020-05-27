@@ -8,12 +8,20 @@
   "source" : [
     "src/csv.kl"
   ],
+  "tests" : [
+    "test/tst_csv_main.kl",
+    "test/tst_csv_read.kl",
+    "test/tst_csv_writ.kl"
+  ],
   "includes" : [
     "include"
   ],
   "depends" : [
     "files",
     "errors",
+    "display",
+    "multitask",
+    "math",
     "Strings",
     "ktransw-macros"
   ]

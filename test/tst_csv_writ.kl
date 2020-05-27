@@ -1,0 +1,30 @@
+PROGRAM tst_csv_writ
+%NOLOCKGROUP
+
+VAR
+  pip_sema FROM tst_csv_main : INTEGER
+  pipe_file FROM tst_csv_main : STRING[16]
+  entries FROM tst_csv_main : INTEGER
+  writedelay FROM tst_csv_main  : INTEGER
+  write_fl : FILE
+  pose : XYZWPR
+  i, tme : INTEGER
+
+%include csv.klh
+%include math.klh
+
+BEGIN
+
+  FOR i=1 TO entries DO
+    --create random initial position
+    GET_TIME(tme)
+    pose = math__rand_position(tme*i)
+    csv__write_row_xyzwpr(pipe_file, write_fl, pose)
+
+    --indicate reading task that there is data in the pipe
+    POST_SEMA (pip_sema)
+
+    -- create fake work
+    DELAY writedelay
+  ENDFOR
+END tst_csv_writ

@@ -1,0 +1,66 @@
+PROGRAM tst_csv_main
+%NOLOCKGROUP
+
+CONST
+  PIPE_NAME = 'PIP:TESTCSV.DAT'
+  CSV_NAME = 'FR:testcsv.csv'
+
+VAR
+    csv_file, pipe_file : STRING[16]
+    entries : INTEGER
+    pip_sema : INTEGER
+    waitime : INTEGER
+    writedelay : INTEGER
+    strt, done : BOOLEAN
+    fl : FILE
+
+%include errors.klt
+
+%include multitask.klh
+%include csv.klh
+%include display.klh
+%include errors.klh
+
+BEGIN
+    --set pip file, and csv file
+    pipe_file = PIPE_NAME
+    csv_file = CSV_NAME
+    --set number of write operations
+    entries = 5
+    --set max wait time for read task
+    waitime = 5000
+    --time between write operations
+    writedelay = 2000
+
+    --set semaphore
+    pip_sema = 1
+    CLEAR_SEMA (pip_sema)
+
+    --clear display
+    display__clear
+
+    --initialize pipe
+    csv__create(pipe_file, fl, ',', 'x,y,z,w,p,r')
+    -- indicate there is data in pip to read
+    POST_SEMA (pip_sema)
+
+    -- start reader
+    strt = task__thread('tst_csv_read')
+    IF NOT strt THEN
+        karelError('could not start csv read task',ER_ABORT)
+    ENDIF
+    -- start writer
+    strt = task__thread('tst_csv_writ')
+    IF NOT strt THEN
+        karelError('could not start csv write task',ER_ABORT)
+    ENDIF
+
+
+    -- keep parent program active until write task is complete
+    REPEAT
+        --check if done writing
+        done = task__is_task_done('tst_csv_writ')
+        delay(100)
+    UNTIL(done)
+
+END tst_csv_main

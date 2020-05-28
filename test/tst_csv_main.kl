@@ -4,15 +4,16 @@ PROGRAM tst_csv_main
 CONST
   PIPE_NAME = 'PIP:TESTCSV.DAT'
   CSV_NAME = 'FR:testcsv.csv'
-
 VAR
     csv_file, pipe_file : STRING[16]
     entries : INTEGER
-    pip_sema : INTEGER
+    maxlines : INTEGER
+    block_write : INTEGER
     waitime : INTEGER
     writedelay : INTEGER
     strt, done : BOOLEAN
     fl : FILE
+    status : INTEGER
 
 %include errors.klt
 
@@ -26,23 +27,23 @@ BEGIN
     pipe_file = PIPE_NAME
     csv_file = CSV_NAME
     --set number of write operations
-    entries = 5
+    entries = 20
+    --set max write lines before reading
+    --to TPDISLAY
+    maxlines = 8
     --set max wait time for read task
     waitime = 5000
     --time between write operations
-    writedelay = 2000
+    writedelay = 1000
 
     --set semaphore
-    pip_sema = 1
-    CLEAR_SEMA (pip_sema)
-
-    --clear display
-    display__clear
+    block_write = 1
+    CLEAR_SEMA (block_write)
+    --make writing immediately available
+    POST_SEMA (block_write)
 
     --initialize pipe
-    csv__create(pipe_file, fl, ',', 'x,y,z,w,p,r')
-    -- indicate there is data in pip to read
-    POST_SEMA (pip_sema)
+    csv__create(pipe_file, fl, ',', 'x,y,z,w,p,r', maxlines)
 
     -- start reader
     strt = task__thread('tst_csv_read')
@@ -60,7 +61,10 @@ BEGIN
     REPEAT
         --check if done writing
         done = task__is_task_done('tst_csv_writ')
-        delay(100)
+        DELAY 100
     UNTIL(done)
+
+    ABORT_TASK('tst_csv_read', TRUE, FALSE, status)
+    WRITE TPDISPLAY(CR,'csv read is done.')
 
 END tst_csv_main

@@ -10,16 +10,8 @@ PROGRAM csv
 %include csv.private.klh
 %include csv.klh
 
-ROUTINE csv__create
-  BEGIN
-    --set delimeter
-    csv__set_delimeter(delim)
-    --set fieldnames
-    csv__set_fieldnames(header)
-    --write fieldnames
-    csv__write_fieldnames(file_name, csv_fl)
-    
-  END csv__create
+
+--private
 
 ROUTINE csv__write_string
   VAR
@@ -48,10 +40,12 @@ ROUTINE csv__write_string
     IF (s <> '') THEN
       WRITE fl(CR)
     ENDIF
+    lines = lines + 1
 
     CLOSE FILE fl
 
   END csv__write_string
+
 
 ROUTINE csv__write_fieldnames
   VAR
@@ -74,10 +68,63 @@ ROUTINE csv__write_fieldnames
     IF (s <> '') THEN
       WRITE csv_fl(CR)
     ENDIF
+    lines = lines + 1
 
     files__close(file_name, csv_fl)
 
   END csv__write_fieldnames
+
+
+ROUTINE csv__clear_fieldnames
+  VAR
+    i : INTEGER
+  BEGIN
+    FOR i=1 TO ARRAY_LEN(fieldnames) DO 
+      fieldnames[i] = ''
+    ENDFOR
+  END csv__clear_fieldnames
+
+
+--public
+
+ROUTINE csv__create
+  BEGIN
+    --set delimeter
+    csv__set_delimeter(delim)
+    --set fieldnames
+    csv__set_fieldnames(header)
+    --reset line count
+    lines = 0
+    --set maximum lines in pipe
+    max_lines = maxlines
+    --write fieldnames
+    csv__write_fieldnames(file_name, csv_fl)
+    
+  END csv__create
+
+
+ROUTINE csv__clear
+  BEGIN
+    files__clear(filename, fl)
+    lines = 0
+  END csv__clear
+
+
+ROUTINE csv__write_pipe
+  BEGIN
+    files__write_pipe(pipname, pip_fl, filename, write_fl, 'AP')
+  END csv__write_pipe
+
+ROUTINE csv__write_display
+  BEGIN
+    files__write_display(filename, fl)
+  END csv__write_display
+
+ROUTINE csv__write_row_string
+  BEGIN
+    csv__write_string(file_name, csv_fl, row)
+  END csv__write_row_string
+
 
 ROUTINE csv__write_row_val
   VAR
@@ -94,11 +141,6 @@ ROUTINE csv__write_row_val
 
     csv__write_string(file_name, csv_fl, row_s)
   END csv__write_row_val
-
-ROUTINE csv__write_row_string
-  BEGIN
-    csv__write_string(file_name, csv_fl, row)
-  END csv__write_row_string
 
 ROUTINE csv__write_row_vector
   VAR
@@ -150,16 +192,6 @@ ROUTINE csv__set_fieldnames
     columns = c
   END csv__set_fieldnames
 
-ROUTINE csv__clear_fieldnames
-  VAR
-    i : INTEGER
-  BEGIN
-    FOR i=1 TO ARRAY_LEN(fieldnames) DO 
-      fieldnames[i] = ''
-    ENDFOR
-  END csv__clear_fieldnames
-
-
 ROUTINE csv__read_open
   BEGIN
     --open pipe
@@ -172,58 +204,41 @@ ROUTINE csv__read_close
     CLOSE FILE pip
   END csv__read_close
 
-ROUTINE csv__read_pipe
-  VAR
-    str : STRING[127]
-    buf, status : INTEGER
+ROUTINE csv__read_line
   BEGIN
-    --see if there is still data to read
-    BYTES_AHEAD(pip, buf, status)
+    RETURN(files__read_line(file_name, pip))
+  END csv__read_line
 
-    --close file if BYTES_AHEAD fails
-    IF status <> 0 THEN
-      csv__read_close(pip)
-    ENDIF
-
-    IF buf > 0 THEN
-      --read line
-      READ pip (str)
-    ENDIF
-
-    RETURN(str)
-
-  END csv__read_pipe
-
-ROUTINE csv__read_pipe_rarr
+ROUTINE csv__read_rarr
   BEGIN
     IF (UNINIT(delimeter)) OR (delimeter = '') THEN
       karelError('delimeter not set before read operation', ER_ABORT)
     ENDIF
 
     --read line and output as real array
-    s_to_rarr(csv__read_pipe(pip), delimeter, out_arr)
+    s_to_rarr(csv__read_line(file_name, pip), delimeter, out_arr)
 
-  END csv__read_pipe_rarr
+  END csv__read_rarr
 
-ROUTINE csv__read_pipe_vector
+ROUTINE csv__read_vector
   BEGIN
     IF (UNINIT(delimeter)) OR (delimeter = '') THEN
       karelError('delimeter not set before read operation', ER_ABORT)
     ENDIF
 
     --read line and output as vector
-    RETURN(s_to_vec(csv__read_pipe(pip), delimeter))
-  END csv__read_pipe_vector
+    RETURN(s_to_vec(csv__read_line(file_name, pip), delimeter))
+  END csv__read_vector
 
-ROUTINE csv__read_pipe_xyzwpr
+ROUTINE csv__read_xyzwpr
   BEGIN
     IF (UNINIT(delimeter)) OR (delimeter = '') THEN
       karelError('delimeter not set before read operation', ER_ABORT)
     ENDIF
     
     --read line and output as vector
-    RETURN(s_to_xyzwpr(csv__read_pipe(pip), delimeter))
-  END csv__read_pipe_xyzwpr
+    RETURN(s_to_xyzwpr(csv__read_line(file_name, pip), delimeter))
+  END csv__read_xyzwpr
 
 BEGIN
 END csv

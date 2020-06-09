@@ -1,0 +1,243 @@
+PROGRAM class_name
+%NOLOCKGROUP
+%COMMENT = 'csv class'
+
+%include namespace.m
+
+%include errors.klt
+%include csv.klt
+
+VAR
+    this : CSV_STRUCT
+    csv_file : FILE
+
+%include errors.klh
+%include strings.klh
+%include files.klh
+%include csv.klh
+
+%include csvclass.private.klh -- class.klh
+%include csvclass.klh -- class.klh
+
+
+--define local classes
+-- ********************
+--private
+%defeval clear_fieldnames classfunc(crfld)
+%defeval write_fieldnames classfunc(wtfld)
+--public
+%defeval constructor classfunc(cntr)
+%defeval destructor classfunc(dsct)
+%defeval clear classfunc(clr)
+--getters
+%defeval get_maxlines classfunc(gtmax)
+%defeval get_lines classfunc(gtlns)
+--setters
+%defeval set_delimeter classfunc(delim)
+%defeval set_fieldnames classfunc(stfld)
+%defeval set_maxlines classfunc(stlns)
+--write
+%defeval write_display classfunc(wrdis)
+%defeval write_row_string classfunc(wrstr)
+%defeval write_row_val classfunc(wrrel)
+%defeval write_row_vector classfunc(wrvec)
+%defeval write_row_xyzwpr classfunc(wrpos)
+--read
+%defeval read_rarr classfunc(rdarr)
+%defeval read_vector classfunc(rdvec)
+%defeval read_xyzwpr classfunc(rdpos)
+-- ********************
+
+--private
+
+ROUTINE clear_fieldnames
+  VAR
+    i : INTEGER
+  BEGIN
+    FOR i=1 TO ARRAY_LEN(this.fieldnames) DO 
+      this.fieldnames[i] = ''
+    ENDFOR
+  END clear_fieldnames
+
+
+ROUTINE write_fieldnames
+  VAR
+    i : INTEGER
+    s : STRING[254]
+  BEGIN
+    -- write header
+    s = ''
+    FOR i=1 TO this.columns DO
+      s = s + this.fieldnames[i]
+      IF i < this.columns THEN
+        s = s + this.delimeter
+      ENDIF
+    ENDFOR
+
+    --open csv to write header
+    files__open(this.filename, 'RW', csv_file)
+
+    WRITE csv_file(s)
+    IF (s <> '') THEN
+      WRITE csv_file(CR)
+    ENDIF
+    this.lines = this.lines + 1
+
+    files__close(this.filename, csv_file)
+
+  END write_fieldnames
+
+--public
+
+ROUTINE constructor
+  BEGIN
+    --set filename
+    this.filename = filename
+    --set delimeter
+    set_delimeter(delim)
+    --set fieldnames
+    set_fieldnames(header)
+    --reset line count
+    this.lines = 0
+    --set maximum lines in pipe
+    this.maxlines = 1000
+    --write fieldnames
+    write_fieldnames
+    
+  END constructor
+
+
+ROUTINE destructor
+  BEGIN
+    csv__clear(this.filename, csv_file)
+    this.filename = ''
+    this.delimeter = ''
+    --clear fieldnames
+    clear_fieldnames
+    this.columns = 0
+    
+    this.lines = 0
+    this.maxlines = 0
+  END destructor
+
+
+ROUTINE clear
+  BEGIN
+    csv__clear(this.filename, csv_file)
+    this.lines = 0
+  END clear
+
+
+--getters
+
+ROUTINE get_maxlines
+  BEGIN
+    RETURN(this.maxlines)
+  END get_maxlines
+
+ROUTINE get_lines
+  BEGIN
+    RETURN(this.lines)
+  END get_lines
+
+--setters
+
+ROUTINE set_delimeter
+  BEGIN
+    IF STR_LEN(delim) > 1 THEN karelError('csv delimeter must be a single char', ER_ABORT) ; ENDIF
+    delim_check(delim)
+
+    this.delimeter = delim
+  END set_delimeter
+
+
+ROUTINE set_fieldnames
+  VAR
+    i : INTEGER
+    c : INTEGER
+  BEGIN
+    --clear fieldnames
+    clear_fieldnames
+    --split header against delimeter
+    split_str(header, this.delimeter, this.fieldnames)
+    --tally columns
+    c = 0
+    FOR i=1 TO ARRAY_LEN(this.fieldnames) DO
+      IF this.fieldnames[i] <> '' THEN c = c + 1 ; ENDIF
+    ENDFOR
+
+    this.columns = c
+  END set_fieldnames
+
+
+ROUTINE set_maxlines
+  BEGIN
+    this.maxlines = maxlines
+  END set_maxlines
+
+
+--write
+ROUTINE write_display
+  BEGIN
+    csv__write_display(this.filename, csv_file)
+  END write_display
+
+
+ROUTINE write_row_string
+  BEGIN
+    IF ARRAY_LEN(row) > this.columns THEN
+      karelError('row length ' + i_to_s(ARRAY_LEN(row)) + ' is larger than number '+ CHR(13) + &
+                  'of columns '+ i_to_s(this.columns) + ' in csv file', ER_WARN_STP)
+    ENDIF
+
+    csv__write_row_string(this.filename, csv_file, this.delimeter, row)
+    this.lines = this.lines + 1
+  END write_row_string
+
+
+ROUTINE write_row_val
+  BEGIN
+    IF ARRAY_LEN(row) > this.columns THEN
+      karelError('row length ' + i_to_s(ARRAY_LEN(row)) + ' is larger than number '+ CHR(13) + &
+                  'of columns '+ i_to_s(this.columns) + ' in csv file', ER_WARN_STP)
+    ENDIF
+
+    csv__write_row_val(this.filename, csv_file, this.delimeter, row)
+    
+    this.lines = this.lines + 1
+  END write_row_val
+
+
+ROUTINE write_row_vector
+  BEGIN
+    csv__write_row_vector(this.filename, csv_file, this.delimeter, row)
+    this.lines = this.lines + 1
+  END write_row_vector
+
+ROUTINE write_row_xyzwpr
+  BEGIN
+    csv__write_row_xyzwpr(this.filename, csv_file, this.delimeter, row)
+    this.lines = this.lines + 1
+  END write_row_xyzwpr
+
+--read
+
+ROUTINE read_rarr
+  BEGIN
+    csv__read_rarr(this.filename, csv_file, this.delimeter, out_arr)
+  END read_rarr
+
+
+ROUTINE read_vector
+  BEGIN
+    RETURN(csv__read_vector(this.filename, csv_file, this.delimeter))
+  END read_vector
+
+
+ROUTINE read_xyzwpr
+  BEGIN
+    RETURN(csv__read_xyzwpr(this.filename, csv_file, this.delimeter))
+  END read_xyzwpr
+
+BEGIN
+END class_name

@@ -5,20 +5,16 @@ CONST
   WRITE_COND = 1
 VAR
   block_write FROM tst_csv_main : INTEGER
-  pipe_file FROM tst_csv_main : STRING[16]
   waitime FROM tst_csv_main : INTEGER
-  max_lines FROM csv : INTEGER
-  lines FROM csv : INTEGER
-  read_fl : FILE
-  str : STRING[127]
   time_out : BOOLEAN
 
-%include errors.klt
 %include display.c.klt
 
-%include errors.klh
-%include csv.klh
 %include display.klh
+%include csv.klh
+
+-- sensor csv file
+%class csvpip('csvclass.klc','csvclass.klh')
 
 BEGIN
   --clear display
@@ -27,13 +23,13 @@ BEGIN
   display__show
   
   WHILE(TRUE) DO
-    IF lines >= max_lines THEN
+    IF csvpip__get_lines >= csvpip__get_maxlines THEN
       PEND_SEMA(block_write, waitime, time_out)
       IF time_out THEN
         GOTO ENDREAD
       ENDIF
-      csv__write_display(pipe_file, read_fl)
-      csv__clear(pipe_file, read_fl)
+      csvpip__write_display
+      csvpip__clear
       POST_SEMA(block_write)
     ENDIF
     DELAY 100

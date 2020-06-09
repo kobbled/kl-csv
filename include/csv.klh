@@ -8,11 +8,7 @@
 
 -- namespaced members in format <prog_name_alias>__<func_name>
 --opts
-declare(prog_name,create,prog_name_alias,create)
 declare(prog_name,clear,prog_name_alias,clr)
---setters
-declare(prog_name,set_delimeter,prog_name_alias,setdelim)
-declare(prog_name,set_fieldnames,prog_name_alias,setfield)
 --write
 declare(prog_name,write_pipe,prog_name_alias,wrtpipe)
 declare(prog_name,write_display,prog_name_alias,wrtdisp)
@@ -29,25 +25,25 @@ declare(prog_name,read_vector,prog_name_alias,rdvec)
 declare(prog_name,read_xyzwpr,prog_name_alias,rdxyz)
 
 --opts
-ROUTINE csv__create(file_name : STRING ; csv_fl : FILE ; delim : STRING ; header : STRING; maxlines : INTEGER) FROM csv
 ROUTINE csv__clear(filename : STRING; fl : FILE) FROM csv
---setters
-ROUTINE csv__set_delimeter(delim : STRING) FROM csv
-ROUTINE csv__set_fieldnames(header : STRING) FROM csv
 --writing
 ROUTINE csv__write_pipe(pipname : STRING; pip_fl : FILE;  &
                         filename : STRING; write_fl : FILE) FROM csv
 ROUTINE csv__write_display(filename : STRING;  fl : FILE) FROM csv
-ROUTINE csv__write_row_string(file_name : STRING ; csv_fl : FILE; row : ARRAY[*] OF STRING) FROM csv
-ROUTINE csv__write_row_val(file_name : STRING ; csv_fl : FILE; row : ARRAY[*] OF REAL) FROM csv
-ROUTINE csv__write_row_vector(file_name : STRING ; csv_fl : FILE; row : VECTOR) FROM csv
-ROUTINE csv__write_row_xyzwpr(file_name : STRING ; csv_fl : FILE; row : XYZWPR) FROM csv
+ROUTINE csv__write_row_string(file_name : STRING ; fl : FILE; &
+                              delimeter : STRING ; row : ARRAY[*] OF STRING) FROM csv
+ROUTINE csv__write_row_val(file_name : STRING ; csv_fl : FILE; delimeter : STRING;  &
+                           row : ARRAY[*] OF REAL) FROM csv
+ROUTINE csv__write_row_vector(file_name : STRING ; csv_fl : FILE; delimeter : STRING; &
+                           row : VECTOR) FROM csv
+ROUTINE csv__write_row_xyzwpr(file_name : STRING ; csv_fl : FILE;  delimeter : STRING; &
+                           row : XYZWPR) FROM csv
 --reading
 ROUTINE csv__read_open(file_name : STRING ; pip : FILE) FROM csv
 ROUTINE csv__read_close(pip : FILE) FROM csv
-ROUTINE csv__read_line(file_name : STRING ;pip : FILE) : STRING FROM csv
-ROUTINE csv__read_rarr(file_name : STRING ; pip : FILE; out_arr : ARRAY[*] OF REAL) FROM csv
-ROUTINE csv__read_vector(file_name : STRING ; pip : FILE) : VECTOR FROM csv
-ROUTINE csv__read_xyzwpr(file_name : STRING ; pip : FILE) : XYZWPR FROM csv
+ROUTINE csv__read_line(file_name : STRING ; pip : FILE) : STRING FROM csv
+ROUTINE csv__read_rarr(file_name : STRING ; pip : FILE; delimeter : STRING; out_arr : ARRAY[*] OF REAL) FROM csv
+ROUTINE csv__read_vector(file_name : STRING ; pip : FILE;  delimeter : STRING) : VECTOR FROM csv
+ROUTINE csv__read_xyzwpr(file_name : STRING ; pip : FILE;  delimeter : STRING) : XYZWPR FROM csv
 
 %endif --csv_h

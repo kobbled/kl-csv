@@ -7,108 +7,17 @@ PROGRAM csv
 %include errors.klh
 %include strings.klh
 %include files.klh
-%include csv.private.klh
 %include csv.klh
 
 
 --private
 
-ROUTINE csv__write_string
-  VAR
-    i : INTEGER
-    s : STRING[254]
-  BEGIN
-    IF ARRAY_LEN(row) > columns THEN
-      karelError('row length ' + i_to_s(ARRAY_LEN(row)) + ' is larger than number '+ CHR(13) + &
-                  'of columns '+ i_to_s(columns) + ' in csv file', ER_WARN_STP)
-    ENDIF
-
-    s = ''
-    FOR i=1 TO columns DO
-      IF UNINIT(row[i]) THEN karelError('uninitialized data in col: ' + i_to_s(i) +  & 
-                                        ' passed to csv file', ER_ABORT) ; ENDIF
-      s = s + row[i]
-      IF i < columns THEN
-        s = s + delimeter
-      ENDIF
-    ENDFOR
-
-    -- write to pipe
-    OPEN FILE fl ('AP', file_name)
-
-    WRITE fl(s)
-    IF (s <> '') THEN
-      WRITE fl(CR)
-    ENDIF
-    lines = lines + 1
-
-    CLOSE FILE fl
-
-  END csv__write_string
-
-
-ROUTINE csv__write_fieldnames
-  VAR
-    i : INTEGER
-    s : STRING[254]
-  BEGIN
-    -- write header
-    s = ''
-    FOR i=1 TO columns DO
-      s = s + fieldnames[i]
-      IF i < columns THEN
-        s = s + delimeter
-      ENDIF
-    ENDFOR
-
-    --open csv to write header
-    files__open(file_name, 'RW', csv_fl)
-
-    WRITE csv_fl(s)
-    IF (s <> '') THEN
-      WRITE csv_fl(CR)
-    ENDIF
-    lines = lines + 1
-
-    files__close(file_name, csv_fl)
-
-  END csv__write_fieldnames
-
-
-ROUTINE csv__clear_fieldnames
-  VAR
-    i : INTEGER
-  BEGIN
-    FOR i=1 TO ARRAY_LEN(fieldnames) DO 
-      fieldnames[i] = ''
-    ENDFOR
-  END csv__clear_fieldnames
-
-
 --public
-
-ROUTINE csv__create
-  BEGIN
-    --set delimeter
-    csv__set_delimeter(delim)
-    --set fieldnames
-    csv__set_fieldnames(header)
-    --reset line count
-    lines = 0
-    --set maximum lines in pipe
-    max_lines = maxlines
-    --write fieldnames
-    csv__write_fieldnames(file_name, csv_fl)
-    
-  END csv__create
-
 
 ROUTINE csv__clear
   BEGIN
     files__clear(filename, fl)
-    lines = 0
   END csv__clear
-
 
 ROUTINE csv__write_pipe
   BEGIN
@@ -121,8 +30,31 @@ ROUTINE csv__write_display
   END csv__write_display
 
 ROUTINE csv__write_row_string
+  VAR
+    i : INTEGER
+    s : STRING[254]
   BEGIN
-    csv__write_string(file_name, csv_fl, row)
+
+    --create csv string from array
+    s = ''
+    FOR i=1 TO ARRAY_LEN(row) DO
+      IF UNINIT(row[i]) THEN karelError('uninitialized data in col: ' + i_to_s(i) +  & 
+                                        ' passed to csv file', ER_ABORT) ; ENDIF
+      s = s + row[i]
+      s = s + delimeter
+    ENDFOR
+    --take out extra
+    s = delim_strip(s, delimeter)
+
+    -- write to pipe
+    OPEN FILE fl ('AP', file_name)
+
+    WRITE fl(s)
+    IF (s <> '') THEN
+      WRITE fl(CR)
+    ENDIF
+
+    CLOSE FILE fl
   END csv__write_row_string
 
 
@@ -139,8 +71,9 @@ ROUTINE csv__write_row_val
       row_s[i] = r_to_s(row[i])
     ENDFOR
 
-    csv__write_string(file_name, csv_fl, row_s)
+    csv__write_row_string(file_name, csv_fl, delimeter, row_s)
   END csv__write_row_val
+
 
 ROUTINE csv__write_row_vector
   VAR
@@ -149,8 +82,9 @@ ROUTINE csv__write_row_vector
     row_s[1] = r_to_s(row.x) 
     row_s[2] = r_to_s(row.y)
     row_s[3] = r_to_s(row.z)
-    csv__write_string(file_name, csv_fl, row_s)
+    csv__write_row_string(file_name, csv_fl, delimeter, row_s)
   END csv__write_row_vector
+
 
 ROUTINE csv__write_row_xyzwpr
   VAR
@@ -162,35 +96,9 @@ ROUTINE csv__write_row_xyzwpr
     row_s[4] = r_to_s(row.w) 
     row_s[5] = r_to_s(row.p)
     row_s[6] = r_to_s(row.r)
-    csv__write_string(file_name, csv_fl, row_s)
+    csv__write_row_string(file_name, csv_fl, delimeter, row_s)
   END csv__write_row_xyzwpr
 
-
-ROUTINE csv__set_delimeter
-  BEGIN
-    IF STR_LEN(delim) > 1 THEN karelError('csv delimeter must be a single char', ER_ABORT) ; ENDIF
-    delim_check(delim)
-
-    delimeter = delim
-  END csv__set_delimeter
-
-ROUTINE csv__set_fieldnames
-  VAR
-    i : INTEGER
-    c : INTEGER
-  BEGIN
-    --clear fieldnames
-    csv__clear_fieldnames
-    --split header against delimeter
-    split_str(header, delimeter, fieldnames)
-    --tally columns
-    c = 0
-    FOR i=1 TO ARRAY_LEN(fieldnames) DO
-      IF fieldnames[i] <> '' THEN c = c + 1 ; ENDIF
-    ENDFOR
-
-    columns = c
-  END csv__set_fieldnames
 
 ROUTINE csv__read_open
   BEGIN
@@ -198,16 +106,19 @@ ROUTINE csv__read_open
     OPEN FILE pip ('RO', file_name)
   END csv__read_open
 
+
 ROUTINE csv__read_close
   BEGIN
     --close pipe
     CLOSE FILE pip
   END csv__read_close
 
+
 ROUTINE csv__read_line
   BEGIN
     RETURN(files__read_line(file_name, pip))
   END csv__read_line
+
 
 ROUTINE csv__read_rarr
   BEGIN
@@ -220,6 +131,7 @@ ROUTINE csv__read_rarr
 
   END csv__read_rarr
 
+
 ROUTINE csv__read_vector
   BEGIN
     IF (UNINIT(delimeter)) OR (delimeter = '') THEN
@@ -230,6 +142,7 @@ ROUTINE csv__read_vector
     RETURN(s_to_vec(csv__read_line(file_name, pip), delimeter))
   END csv__read_vector
 
+
 ROUTINE csv__read_xyzwpr
   BEGIN
     IF (UNINIT(delimeter)) OR (delimeter = '') THEN
@@ -239,6 +152,7 @@ ROUTINE csv__read_xyzwpr
     --read line and output as vector
     RETURN(s_to_xyzwpr(csv__read_line(file_name, pip), delimeter))
   END csv__read_xyzwpr
+
 
 BEGIN
 END csv

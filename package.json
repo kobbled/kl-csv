@@ -14,7 +14,8 @@
     "test/tst_csv_writ.kl"
   ],
   "includes" : [
-    "include"
+    "include",
+    "include/class"
   ],
   "depends" : [
     "files",

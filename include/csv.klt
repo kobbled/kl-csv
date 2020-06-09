@@ -9,13 +9,15 @@
 %define CYLINDRICAL_HEADER 'theta,z,r'
 %define POSITION_HEADER 'x,y,z,w,p,r'
 
-
-VAR
-  fieldnames : ARRAY[CSV_MAX_COLUMNS] OF STRING[CSV_CELL_LENGTH]
-  delimeter : STRING[1]
-  columns : INTEGER
-  lines : INTEGER
-  max_lines : INTEGER
+TYPE
+	CSV_STRUCT FROM csv = STRUCTURE
+    filename : STRING[12]
+		fieldnames : ARRAY[CSV_MAX_COLUMNS] OF STRING[CSV_CELL_LENGTH]
+    delimeter : STRING[1]
+    columns : INTEGER
+    lines : INTEGER
+    maxlines : INTEGER
+	ENDSTRUCTURE
 
 
 %endif --csv_t

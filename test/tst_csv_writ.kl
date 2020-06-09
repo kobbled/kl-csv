@@ -3,17 +3,19 @@ PROGRAM tst_csv_writ
 
 VAR
   block_write FROM tst_csv_main : INTEGER
-  pipe_file FROM tst_csv_main : STRING[16]
   entries FROM tst_csv_main : INTEGER
   waitime FROM tst_csv_main : INTEGER
   writedelay FROM tst_csv_main  : INTEGER
-  write_fl : FILE
   pose : XYZWPR
   i, tme : INTEGER
   time_out : BOOLEAN
 
-%include csv.klh
 %include math.klh
+%include csv.klh
+
+-- sensor csv file
+%class csvpip('csvclass.klc','csvclass.klh')
+
 
 BEGIN
 
@@ -27,7 +29,8 @@ BEGIN
     --create random initial position
     tme = GET_USEC_TIM
     pose = math__rand_position(tme)
-    csv__write_row_xyzwpr(pipe_file, write_fl, pose)
+    --write pose to csv pipe
+    csvpip__write_row_xyzwpr(pose)
     
     POST_SEMA (block_write)
 
@@ -35,8 +38,8 @@ BEGIN
     DELAY writedelay
   ENDFOR
   -- write to display for remainder data
-  csv__write_display(pipe_file, write_fl)
-  csv__clear(pipe_file, write_fl)
+  csvpip__write_display
+  csvpip__clear
 
   ENDWRIT::
   WRITE TPDISPLAY(CR,'csv write is done.')

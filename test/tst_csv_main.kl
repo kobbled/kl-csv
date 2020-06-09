@@ -4,33 +4,32 @@ PROGRAM tst_csv_main
 CONST
   PIPE_NAME = 'PIP:TESTCSV.DAT'
   CSV_NAME = 'FR:testcsv.csv'
+  --set max write lines before reading
+  --to TPDISLAY
+  MAXLINES = 8
 VAR
-    csv_file, pipe_file : STRING[16]
+    csv_file: STRING[16]
     entries : INTEGER
-    maxlines : INTEGER
     block_write : INTEGER
     waitime : INTEGER
     writedelay : INTEGER
     strt, done : BOOLEAN
-    fl : FILE
     status : INTEGER
 
 %include errors.klt
+%include csv.klt
 
 %include multitask.klh
-%include csv.klh
 %include display.klh
 %include errors.klh
+%include csv.klh
+
+-- sensor csv file
+%class csvpip('csvclass.klc','csvclass.klh')
 
 BEGIN
-    --set pip file, and csv file
-    pipe_file = PIPE_NAME
-    csv_file = CSV_NAME
     --set number of write operations
     entries = 20
-    --set max write lines before reading
-    --to TPDISLAY
-    maxlines = 8
     --set max wait time for read task
     waitime = 5000
     --time between write operations
@@ -43,7 +42,8 @@ BEGIN
     POST_SEMA (block_write)
 
     --initialize pipe
-    csv__create(pipe_file, fl, ',', 'x,y,z,w,p,r', maxlines)
+    csvpip__constructor(PIPE_NAME, ',', POSITION_HEADER)
+    csvpip__set_maxlines(MAXLINES)
 
     -- start reader
     strt = task__thread('tst_csv_read')
@@ -64,7 +64,9 @@ BEGIN
         DELAY 100
     UNTIL(done)
 
-    ABORT_TASK('tst_csv_read', TRUE, FALSE, status)
+    done = task__abort('tst_csv_read')
     WRITE TPDISPLAY(CR,'csv read is done.')
+
+    csvpip__destructor
 
 END tst_csv_main

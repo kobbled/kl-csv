@@ -1,0 +1,58 @@
+--header
+%include header_guard.m
+--oop
+%include namespace.m
+
+--start header file
+header_if -- ifndef class
+header_def -- define class
+
+-- namespaced members in format <prog_name_alias>__<func_name>
+declare(class_name,constructor,class_name,cntr)
+declare(class_name,destructor,class_name,dsct)
+declare(class_name,clear,class_name,clr)
+--getters
+declare(class_name,get_maxlines,class_name,gtmax)
+declare(class_name,get_lines,class_name,gtlns)
+--setters
+declare(class_name,set_delimeter,class_name,delim)
+declare(class_name,set_fieldnames,class_name,stfld)
+declare(class_name,set_maxlines,class_name,stlns)
+--write
+declare(class_name,write_display,class_name,wrdis)
+declare(class_name,write_row_string,class_name,wrstr)
+declare(class_name,write_row_val,class_name,wrrel)
+declare(class_name,write_row_vector,class_name,wrvec)
+declare(class_name,write_row_xyzwpr,class_name,wrpos)
+--read
+declare(class_name,read_rarr,class_name,rdarr)
+declare(class_name,read_vector,class_name,rdvec)
+declare(class_name,read_xyzwpr,class_name,rdpos)
+
+
+ROUTINE classfunc(cntr) (filename : STRING ; delim : STRING ; header : STRING) FROM class_name
+ROUTINE classfunc(dsct) FROM class_name
+ROUTINE classfunc(clr) FROM class_name
+
+--getters
+ROUTINE classfunc(gtmax) : INTEGER FROM class_name
+ROUTINE classfunc(gtlns) : INTEGER FROM class_name
+
+--setters
+ROUTINE classfunc(delim) (delim : STRING) FROM class_name
+ROUTINE classfunc(stfld) (header : STRING) FROM class_name
+ROUTINE classfunc(stlns) (maxlines : INTEGER) FROM class_name
+
+--write
+ROUTINE classfunc(wrdis) FROM class_name
+ROUTINE classfunc(wrstr) (row : ARRAY[*] OF STRING) FROM class_name
+ROUTINE classfunc(wrrel) (row : ARRAY[*] OF REAL) FROM class_name
+ROUTINE classfunc(wrvec) (row : VECTOR) FROM class_name
+ROUTINE classfunc(wrpos) (row : XYZWPR) FROM class_name
+
+--read
+ROUTINE classfunc(rdarr) (out_arr : ARRAY[*] OF REAL) FROM class_name
+ROUTINE classfunc(rdvec) : VECTOR FROM class_name
+ROUTINE classfunc(rdpos) : XYZWPR FROM class_name
+
+%endif --end header

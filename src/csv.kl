@@ -4,6 +4,10 @@ PROGRAM csv
 %include errors.klt
 %include csv.klt
 
+VAR
+  read_v : VECTOR
+  read_p : XYZWPR
+
 %include errors.klh
 %include strings.klh
 %include files.klh
@@ -165,7 +169,6 @@ ROUTINE csv__read_rarr
     s = csv__read_types_(file_name, fl, delimeter, 1, out_arr, v, p)
     IF NOT s THEN
       out_arr = uninit_arr
-      --karelError(EXPECTED_REAL, 'csv read did not return a real array.', ER_WARN)
     ENDIF
   END csv__read_rarr
 
@@ -174,35 +177,39 @@ ROUTINE csv__read_vector
   VAR
     r : ARRAY[1] OF REAL
     p : XYZWPR
-    v : VECTOR
-    uninit_v : VECTOR
-    s : BOOLEAN
+    uninit_v : ARRAY[1] OF VECTOR
+    entry : INTEGER
+    status: INTEGER
+    b : BOOLEAN
    BEGIN
-    s = csv__read_types_(file_name, fl, delimeter, 2, r, v, p)
-    IF NOT s THEN
-      v = uninit_v
-      --karelError(VECTOR_INVALID, 'csv read did not return a vector.', ER_WARN)
+    b = csv__read_types_(file_name, fl, delimeter, 2, r, out_v, p)
+    --use flag to tell parent task if EOF or an error has been reached
+    read_v = out_v
+    IF NOT b THEN
+      --set vector to uninit
+      SET_VAR(entry,'csv','read_v',uninit_v[1],status)
     ENDIF
 
-    RETURN(v)
   END csv__read_vector
 
 
 ROUTINE csv__read_xyzwpr
   VAR
     r : ARRAY[1] OF REAL
-    p : XYZWPR
-    uninit_p : XYZWPR
+    uninit_p : ARRAY[1] OF XYZWPR
     v : VECTOR
-    s : BOOLEAN
+    entry : INTEGER
+    status: INTEGER
+    b : BOOLEAN
   BEGIN
-    s = csv__read_types_(file_name, fl, delimeter, 3, r, v, p)
-    IF NOT s THEN
-      p = uninit_p
-      --karelError(POS_TYPE_MISMATCH, 'csv read did not return a pose.', ER_WARN)
+    b = csv__read_types_(file_name, fl, delimeter, 3, r, v, out_p)
+    --use flag to tell parent task if EOF or an error has been reached
+    read_p = out_p
+    IF NOT b THEN
+      --set xyzwpr to uninit
+      SET_VAR(entry,'csv','read_p',uninit_p[1],status)
     ENDIF
 
-    RETURN(p)
   END csv__read_xyzwpr
 
 

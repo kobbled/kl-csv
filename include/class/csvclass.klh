@@ -27,7 +27,7 @@ declare(class_name,write_row_vector,class_name,wrvec)
 declare(class_name,write_row_xyzwpr,class_name,wrpos)
 --read
 declare(class_name,read_rarr,class_name,rdarr)
-declare(class_name,read_vector,class_name,rdvec)
+declare(class_name,read_vector,class_name,rdvc)
 declare(class_name,read_xyzwpr,class_name,rdpos)
 
 
@@ -53,8 +53,8 @@ ROUTINE classfunc(wrvec) (row : VECTOR) FROM class_name
 ROUTINE classfunc(wrpos) (row : XYZWPR) FROM class_name
 
 --read
-ROUTINE classfunc(rdarr) (out_arr : ARRAY[*] OF REAL) FROM class_name
-ROUTINE classfunc(rdvec) : VECTOR FROM class_name
-ROUTINE classfunc(rdpos) : XYZWPR FROM class_name
+ROUTINE classfunc(rdarr) (out_arr, uninit_arr : ARRAY[*] OF REAL) FROM class_name
+ROUTINE classfunc(rdvc) (out_v : VECTOR) FROM class_name
+ROUTINE classfunc(rdpos) (out_p : XYZWPR) FROM class_name
 
 %endif --end header

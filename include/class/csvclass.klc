@@ -44,7 +44,7 @@ VAR
 %defeval write_row_xyzwpr classfunc(wrpos)
 --read
 %defeval read_rarr classfunc(rdarr)
-%defeval read_vector classfunc(rdvec)
+%defeval read_vector classfunc(rdvc)
 %defeval read_xyzwpr classfunc(rdpos)
 -- ********************
 
@@ -222,19 +222,19 @@ ROUTINE write_row_xyzwpr
 
 ROUTINE read_rarr
   BEGIN
-    csv__read_rarr(this.filename, csv_file, this.delimeter, out_arr)
+    csv__read_rarr(this.filename, csv_file, this.delimeter, out_arr, uninit_arr)
   END read_rarr
 
 
 ROUTINE read_vector
   BEGIN
-    RETURN(csv__read_vector(this.filename, csv_file, this.delimeter))
+    csv__read_vector(this.filename, csv_file, this.delimeter, out_v)
   END read_vector
 
 
 ROUTINE read_xyzwpr
   BEGIN
-    RETURN(csv__read_xyzwpr(this.filename, csv_file, this.delimeter))
+    csv__read_xyzwpr(this.filename, csv_file, this.delimeter, out_p)
   END read_xyzwpr
 
 BEGIN

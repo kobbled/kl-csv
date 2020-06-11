@@ -44,7 +44,7 @@ ROUTINE csv__read_close(fl : FILE) FROM csv
 ROUTINE csv__read_line(file_name : STRING ; fl : FILE) : STRING FROM csv
 ROUTINE csv__read_rarr(file_name : STRING ; fl : FILE; delimeter : STRING; &
                        out_arr : ARRAY[*] OF REAL; uninit_arr : ARRAY[*] OF REAL) FROM csv
-ROUTINE csv__read_vector(file_name : STRING ; fl : FILE;  delimeter : STRING) : VECTOR FROM csv
-ROUTINE csv__read_xyzwpr(file_name : STRING ; fl : FILE;  delimeter : STRING) : XYZWPR FROM csv
+ROUTINE csv__read_vector(file_name : STRING ; fl : FILE;  delimeter : STRING; out_v : VECTOR) FROM csv
+ROUTINE csv__read_xyzwpr(file_name : STRING ; fl : FILE;  delimeter : STRING; out_p : XYZWPR) FROM csv
 
 %endif --csv_h

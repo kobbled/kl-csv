@@ -1,4 +1,4 @@
-PROGRAM tst_csv_writ
+PROGRAM tst_csv_pipe
 %NOLOCKGROUP
 
 VAR
@@ -38,10 +38,10 @@ BEGIN
     DELAY writedelay
   ENDFOR
   -- write to display for remainder data
-  csvpip__write_display
+  csvpip__write_to_display
   csvpip__clear
 
   ENDWRIT::
   WRITE TPDISPLAY(CR,'csv write is done.')
   
-END tst_csv_writ
+END tst_csv_pipe

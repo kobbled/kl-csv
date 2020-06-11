@@ -1,4 +1,4 @@
-PROGRAM tst_csv_read
+PROGRAM tst_csv_writ
 %NOLOCKGROUP
 
 CONST
@@ -28,7 +28,7 @@ BEGIN
       IF time_out THEN
         GOTO ENDREAD
       ENDIF
-      csvpip__write_display
+      csvpip__write_to_display
       csvpip__clear
       POST_SEMA(block_write)
     ENDIF
@@ -36,4 +36,4 @@ BEGIN
   ENDWHILE
   ENDREAD::
 
-END tst_csv_read
+END tst_csv_writ

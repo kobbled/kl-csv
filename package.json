@@ -9,9 +9,9 @@
     "src/csv.kl"
   ],
   "tests" : [
-    "test/tst_csv_main.kl",
-    "test/tst_csv_read.kl",
-    "test/tst_csv_writ.kl"
+    "test/write_test/tst_csv_main.kl",
+    "test/write_test/tst_csv_pipe.kl",
+    "test/write_test/tst_csv_writ.kl",
   ],
   "includes" : [
     "include",

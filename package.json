@@ -12,6 +12,8 @@
     "test/write_test/tst_csv_main.kl",
     "test/write_test/tst_csv_pipe.kl",
     "test/write_test/tst_csv_writ.kl",
+    "test/read_test/tst_csv_read.kl",
+    "test/read_test/read_data.csv"
   ],
   "includes" : [
     "include",

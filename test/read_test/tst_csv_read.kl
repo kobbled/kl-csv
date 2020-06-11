@@ -1,0 +1,43 @@
+PROGRAM tst_csv_read
+%NOLOCKGROUP
+
+CONST
+  CSV_NAME = 'FR:\read_data.csv'
+  SAMPLE_TIME = 100
+
+VAR 
+  fl : FILE
+  pose : XYZWPR
+  read_p FROM csv : XYZWPR --flag needed to tell when EOF is reached
+  head : STRING[12]
+
+%include display.c.klt
+
+%include display.klh
+%include strings.klh
+%include csv.klh
+
+BEGIN
+  --open csv file
+  csv__read_open(CSV_NAME, fl)
+  --read header
+  head = csv__read_line(CSV_NAME, fl)
+
+  --clear display
+  display__clear
+  --show display
+  display__show
+  WRITE TPDISPLAY(CR,CR)
+
+  REPEAT
+    csv__read_xyzwpr(CSV_NAME, fl, ',', pose)
+    WRITE TPDISPLAY(pose_to_s(pose,','),CR)
+
+    DELAY SAMPLE_TIME
+  UNTIL(UNINIT(read_p))
+
+  csv__read_close(fl)
+
+  WRITE TPDISPLAY('Read finished!',CR)
+
+END tst_csv_read

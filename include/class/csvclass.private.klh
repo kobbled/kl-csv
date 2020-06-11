@@ -3,7 +3,5 @@
 
 -- namespaced members in format <prog_name_alias>__<func_name>
 declare(class_name,clear_fieldnames,class_name,crfld)
-declare(class_name,write_fieldnames,class_name,wtfld)
 
 ROUTINE classfunc(crfld) FROM class_name
-ROUTINE classfunc(wtfld) FROM class_name

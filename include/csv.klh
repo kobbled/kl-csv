@@ -11,7 +11,7 @@
 declare(prog_name,clear,prog_name_alias,clr)
 --write
 declare(prog_name,write_pipe,prog_name_alias,wrtpipe)
-declare(prog_name,write_display,prog_name_alias,wrtdisp)
+declare(prog_name,write_to_display,prog_name_alias,wrtdisp)
 declare(prog_name,write_row_val,prog_name_alias,rowvals)
 declare(prog_name,write_row_string,prog_name_alias,rowstr)
 declare(prog_name,write_row_vector,prog_name_alias,rowvec)
@@ -29,7 +29,7 @@ ROUTINE csv__clear(filename : STRING; fl : FILE) FROM csv
 --writing
 ROUTINE csv__write_pipe(pipname : STRING; pip_fl : FILE;  &
                         filename : STRING; write_fl : FILE) FROM csv
-ROUTINE csv__write_display(filename : STRING;  fl : FILE) FROM csv
+ROUTINE csv__write_to_display(filename : STRING;  fl : FILE) FROM csv
 ROUTINE csv__write_row_string(file_name : STRING ; fl : FILE; &
                               delimeter : STRING ; row : ARRAY[*] OF STRING) FROM csv
 ROUTINE csv__write_row_val(file_name : STRING ; csv_fl : FILE; delimeter : STRING;  &
@@ -39,11 +39,12 @@ ROUTINE csv__write_row_vector(file_name : STRING ; csv_fl : FILE; delimeter : ST
 ROUTINE csv__write_row_xyzwpr(file_name : STRING ; csv_fl : FILE;  delimeter : STRING; &
                            row : XYZWPR) FROM csv
 --reading
-ROUTINE csv__read_open(file_name : STRING ; pip : FILE) FROM csv
-ROUTINE csv__read_close(pip : FILE) FROM csv
-ROUTINE csv__read_line(file_name : STRING ; pip : FILE) : STRING FROM csv
-ROUTINE csv__read_rarr(file_name : STRING ; pip : FILE; delimeter : STRING; out_arr : ARRAY[*] OF REAL) FROM csv
-ROUTINE csv__read_vector(file_name : STRING ; pip : FILE;  delimeter : STRING) : VECTOR FROM csv
-ROUTINE csv__read_xyzwpr(file_name : STRING ; pip : FILE;  delimeter : STRING) : XYZWPR FROM csv
+ROUTINE csv__read_open(file_name : STRING ; fl : FILE) FROM csv
+ROUTINE csv__read_close(fl : FILE) FROM csv
+ROUTINE csv__read_line(file_name : STRING ; fl : FILE) : STRING FROM csv
+ROUTINE csv__read_rarr(file_name : STRING ; fl : FILE; delimeter : STRING; &
+                       out_arr : ARRAY[*] OF REAL; uninit_arr : ARRAY[*] OF REAL) FROM csv
+ROUTINE csv__read_vector(file_name : STRING ; fl : FILE;  delimeter : STRING) : VECTOR FROM csv
+ROUTINE csv__read_xyzwpr(file_name : STRING ; fl : FILE;  delimeter : STRING) : XYZWPR FROM csv
 
 %endif --csv_h

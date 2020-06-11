@@ -8,9 +8,46 @@ PROGRAM csv
 %include strings.klh
 %include files.klh
 %include csv.klh
+%include csv.private.klh
 
 
 --private
+
+ROUTINE csv__read_types_
+  VAR
+    str : STRING[127]
+    success : BOOLEAN
+  BEGIN
+    success = FALSE
+
+    IF (UNINIT(delimeter) OR (delimeter = '')) THEN
+      karelError(VAR_UNINIT, 'delimeter not set before read operation', ER_ABORT)
+    ENDIF
+
+    --read line
+    str = files__read_line(file_name, fl)
+    --check if readline was successful
+    IF ((str = '') OR UNINIT(str) OR (str = 'EOF')) THEN
+      RETURN(FALSE)
+    ENDIF
+
+    SELECT typ OF
+      CASE(1): --rarr
+        s_to_rarr(str, delimeter, real_arr)
+        success = TRUE
+      CASE(2): --vector
+        v = s_to_vec(str, delimeter)
+        success = TRUE
+      CASE(3): --xyzwpr
+        p = s_to_xyzwpr(str, delimeter)
+        success = TRUE
+      ELSE:
+        karelError(INVALID_TYPE_CODE, 'type not set correctly for private method read_types_', ER_ABORT)
+    ENDSELECT
+
+    RETURN(success)
+    
+  END csv__read_types_
 
 --public
 
@@ -21,13 +58,13 @@ ROUTINE csv__clear
 
 ROUTINE csv__write_pipe
   BEGIN
-    files__write_pipe(pipname, pip_fl, filename, write_fl, 'AP')
+    files__write_from_pipe(pipname, pip_fl, filename, write_fl)
   END csv__write_pipe
 
-ROUTINE csv__write_display
+ROUTINE csv__write_to_display
   BEGIN
-    files__write_display(filename, fl)
-  END csv__write_display
+    files__write_to_display(filename, fl)
+  END csv__write_to_display
 
 ROUTINE csv__write_row_string
   VAR
@@ -38,7 +75,7 @@ ROUTINE csv__write_row_string
     --create csv string from array
     s = ''
     FOR i=1 TO ARRAY_LEN(row) DO
-      IF UNINIT(row[i]) THEN karelError('uninitialized data in col: ' + i_to_s(i) +  & 
+      IF UNINIT(row[i]) THEN karelError(VAR_UNINIT, 'uninitialized data in col: ' + i_to_s(i) +  & 
                                         ' passed to csv file', ER_ABORT) ; ENDIF
       s = s + row[i]
       s = s + delimeter
@@ -64,7 +101,7 @@ ROUTINE csv__write_row_val
     row_s : ARRAY[CSV_MAX_COLUMNS] OF STRING[CSV_CELL_LENGTH]
   BEGIN
     IF ARRAY_LEN(row) > ARRAY_LEN(row_s) THEN
-      karelError('real row is greater than max csv columns, ' + i_to_s(CSV_MAX_COLUMNS), ER_ABORT)
+      karelError(INVALID_INDEX, 'real row is greater than max csv columns, ' + i_to_s(CSV_MAX_COLUMNS), ER_ABORT)
     ENDIF
 
     FOR i=1 TO ARRAY_LEN(row) DO
@@ -102,55 +139,70 @@ ROUTINE csv__write_row_xyzwpr
 
 ROUTINE csv__read_open
   BEGIN
-    --open pipe
-    OPEN FILE pip ('RO', file_name)
+    OPEN FILE fl ('RO', file_name)
   END csv__read_open
 
 
 ROUTINE csv__read_close
   BEGIN
-    --close pipe
-    CLOSE FILE pip
+    CLOSE FILE fl
   END csv__read_close
 
 
 ROUTINE csv__read_line
   BEGIN
-    RETURN(files__read_line(file_name, pip))
+    --readline if data
+    RETURN(files__read_line(file_name, fl))
   END csv__read_line
 
 
 ROUTINE csv__read_rarr
+  VAR
+    v : VECTOR
+    p : XYZWPR
+    s : BOOLEAN
   BEGIN
-    IF (UNINIT(delimeter)) OR (delimeter = '') THEN
-      karelError('delimeter not set before read operation', ER_ABORT)
+    s = csv__read_types_(file_name, fl, delimeter, 1, out_arr, v, p)
+    IF NOT s THEN
+      out_arr = uninit_arr
+      --karelError(EXPECTED_REAL, 'csv read did not return a real array.', ER_WARN)
     ENDIF
-
-    --read line and output as real array
-    s_to_rarr(csv__read_line(file_name, pip), delimeter, out_arr)
-
   END csv__read_rarr
 
 
 ROUTINE csv__read_vector
-  BEGIN
-    IF (UNINIT(delimeter)) OR (delimeter = '') THEN
-      karelError('delimeter not set before read operation', ER_ABORT)
+  VAR
+    r : ARRAY[1] OF REAL
+    p : XYZWPR
+    v : VECTOR
+    uninit_v : VECTOR
+    s : BOOLEAN
+   BEGIN
+    s = csv__read_types_(file_name, fl, delimeter, 2, r, v, p)
+    IF NOT s THEN
+      v = uninit_v
+      --karelError(VECTOR_INVALID, 'csv read did not return a vector.', ER_WARN)
     ENDIF
 
-    --read line and output as vector
-    RETURN(s_to_vec(csv__read_line(file_name, pip), delimeter))
+    RETURN(v)
   END csv__read_vector
 
 
 ROUTINE csv__read_xyzwpr
+  VAR
+    r : ARRAY[1] OF REAL
+    p : XYZWPR
+    uninit_p : XYZWPR
+    v : VECTOR
+    s : BOOLEAN
   BEGIN
-    IF (UNINIT(delimeter)) OR (delimeter = '') THEN
-      karelError('delimeter not set before read operation', ER_ABORT)
+    s = csv__read_types_(file_name, fl, delimeter, 3, r, v, p)
+    IF NOT s THEN
+      p = uninit_p
+      --karelError(POS_TYPE_MISMATCH, 'csv read did not return a pose.', ER_WARN)
     ENDIF
-    
-    --read line and output as vector
-    RETURN(s_to_xyzwpr(csv__read_line(file_name, pip), delimeter))
+
+    RETURN(p)
   END csv__read_xyzwpr
 
 

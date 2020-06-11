@@ -37,7 +37,7 @@ VAR
 %defeval set_fieldnames classfunc(stfld)
 %defeval set_maxlines classfunc(stlns)
 --write
-%defeval write_display classfunc(wrdis)
+%defeval write_to_display classfunc(wrdis)
 %defeval write_row_string classfunc(wrstr)
 %defeval write_row_val classfunc(wrrel)
 %defeval write_row_vector classfunc(wrvec)
@@ -101,9 +101,7 @@ ROUTINE constructor
     this.lines = 0
     --set maximum lines in pipe
     this.maxlines = 1000
-    --write fieldnames
-    write_fieldnames
-    
+
   END constructor
 
 
@@ -144,7 +142,7 @@ ROUTINE get_lines
 
 ROUTINE set_delimeter
   BEGIN
-    IF STR_LEN(delim) > 1 THEN karelError('csv delimeter must be a single char', ER_ABORT) ; ENDIF
+    IF STR_LEN(delim) > 1 THEN karelError(0, 'csv delimeter must be a single char', ER_ABORT) ; ENDIF
     delim_check(delim)
 
     this.delimeter = delim
@@ -177,16 +175,16 @@ ROUTINE set_maxlines
 
 
 --write
-ROUTINE write_display
+ROUTINE write_to_display
   BEGIN
-    csv__write_display(this.filename, csv_file)
-  END write_display
+    csv__write_to_display(this.filename, csv_file)
+  END write_to_display
 
 
 ROUTINE write_row_string
   BEGIN
     IF ARRAY_LEN(row) > this.columns THEN
-      karelError('row length ' + i_to_s(ARRAY_LEN(row)) + ' is larger than number '+ CHR(13) + &
+      karelError(ARR_LEN_MISMATCH, 'row length ' + i_to_s(ARRAY_LEN(row)) + ' is larger than number '+ CHR(13) + &
                   'of columns '+ i_to_s(this.columns) + ' in csv file', ER_WARN_STP)
     ENDIF
 
@@ -198,7 +196,7 @@ ROUTINE write_row_string
 ROUTINE write_row_val
   BEGIN
     IF ARRAY_LEN(row) > this.columns THEN
-      karelError('row length ' + i_to_s(ARRAY_LEN(row)) + ' is larger than number '+ CHR(13) + &
+      karelError(ARR_LEN_MISMATCH, 'row length ' + i_to_s(ARRAY_LEN(row)) + ' is larger than number '+ CHR(13) + &
                   'of columns '+ i_to_s(this.columns) + ' in csv file', ER_WARN_STP)
     ENDIF
 

@@ -60,6 +60,13 @@ ROUTINE csv__clear
     files__clear(filename, fl)
   END csv__clear
 
+ROUTINE csv__create
+  VAR
+    b : BOOLEAN
+  BEGIN
+    b = files__create(filename, fl)
+  END csv__create
+
 ROUTINE csv__write_pipe
   BEGIN
     files__write_from_pipe(pipname, pip_fl, filename, write_fl)
@@ -88,14 +95,8 @@ ROUTINE csv__write_row_string
     s = delim_strip(s, delimeter)
 
     -- write to pipe
-    OPEN FILE fl ('AP', file_name)
+    files__write(s, file_name, fl)
 
-    WRITE fl(s)
-    IF (s <> '') THEN
-      WRITE fl(CR)
-    ENDIF
-
-    CLOSE FILE fl
   END csv__write_row_string
 
 

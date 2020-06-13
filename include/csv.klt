@@ -11,7 +11,7 @@
 
 TYPE
 	CSV_STRUCT FROM csv = STRUCTURE
-    filename : STRING[12]
+    filename : STRING[20]
 		fieldnames : ARRAY[CSV_MAX_COLUMNS] OF STRING[CSV_CELL_LENGTH]
     delimeter : STRING[1]
     columns : INTEGER

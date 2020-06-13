@@ -38,6 +38,7 @@ VAR
 %defeval set_maxlines classfunc(stlns)
 --write
 %defeval write_to_display classfunc(wrdis)
+%defeval write_to_file classfunc(wrfil)
 %defeval write_row_string classfunc(wrstr)
 %defeval write_row_val classfunc(wrrel)
 %defeval write_row_vector classfunc(wrvec)
@@ -107,7 +108,6 @@ ROUTINE constructor
 
 ROUTINE destructor
   BEGIN
-    csv__clear(this.filename, csv_file)
     this.filename = ''
     this.delimeter = ''
     --clear fieldnames
@@ -179,6 +179,11 @@ ROUTINE write_to_display
   BEGIN
     csv__write_to_display(this.filename, csv_file)
   END write_to_display
+
+ROUTINE write_to_file
+  BEGIN
+    csv__write_pipe(this.filename, csv_file, filename, fl)
+  END write_to_file
 
 
 ROUTINE write_row_string

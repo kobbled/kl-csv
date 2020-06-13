@@ -21,6 +21,7 @@ declare(class_name,set_maxlines,class_name,stlns)
 --write
 declare(class_name,write_fieldnames,class_name,wtfld)
 declare(class_name,write_to_display,class_name,wrdis)
+declare(class_name,write_to_file,class_name,wrfil)
 declare(class_name,write_row_string,class_name,wrstr)
 declare(class_name,write_row_val,class_name,wrrel)
 declare(class_name,write_row_vector,class_name,wrvec)
@@ -47,6 +48,7 @@ ROUTINE classfunc(stlns) (maxlines : INTEGER) FROM class_name
 --write
 ROUTINE classfunc(wtfld) FROM class_name
 ROUTINE classfunc(wrdis) FROM class_name
+ROUTINE classfunc(wrfil) (filename : STRING; fl : FILE) FROM class_name
 ROUTINE classfunc(wrstr) (row : ARRAY[*] OF STRING) FROM class_name
 ROUTINE classfunc(wrrel) (row : ARRAY[*] OF REAL) FROM class_name
 ROUTINE classfunc(wrvec) (row : VECTOR) FROM class_name

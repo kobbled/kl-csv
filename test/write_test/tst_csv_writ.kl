@@ -4,6 +4,8 @@ PROGRAM tst_csv_writ
 CONST
   WRITE_COND = 1
 VAR
+  csv_name FROM tst_csv_main : STRING[16]
+  csv_file FROM tst_csv_main : FILE
   block_write FROM tst_csv_main : INTEGER
   waitime FROM tst_csv_main : INTEGER
   time_out : BOOLEAN
@@ -28,7 +30,7 @@ BEGIN
       IF time_out THEN
         GOTO ENDREAD
       ENDIF
-      csvpip__write_to_display
+      csvpip__write_to_file(csv_name, csv_file)
       csvpip__clear
       POST_SEMA(block_write)
     ENDIF

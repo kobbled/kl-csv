@@ -2,6 +2,8 @@ PROGRAM tst_csv_pipe
 %NOLOCKGROUP
 
 VAR
+  csv_name FROM tst_csv_main : STRING[16]
+  csv_file FROM tst_csv_main : FILE
   block_write FROM tst_csv_main : INTEGER
   entries FROM tst_csv_main : INTEGER
   waitime FROM tst_csv_main : INTEGER
@@ -38,7 +40,7 @@ BEGIN
     DELAY writedelay
   ENDFOR
   -- write to display for remainder data
-  csvpip__write_to_display
+  csvpip__write_to_file(csv_name, csv_file)
   csvpip__clear
 
   ENDWRIT::

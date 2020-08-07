@@ -3,12 +3,13 @@ PROGRAM tst_csv_main
 
 CONST
   PIPE_NAME = 'PIP:TESTCSV.DAT'
-  CSV_NAME = 'FR:testcsv.csv'
+  FILE_NAME = 'FR:testcsv.csv'
   --set max write lines before reading
   --to TPDISLAY
   MAXLINES = 8
 VAR
-    csv_file: STRING[16]
+    csv_name : STRING[16]
+    csv_file : FILE
     entries : INTEGER
     block_write : INTEGER
     waitime : INTEGER
@@ -40,6 +41,12 @@ BEGIN
     CLEAR_SEMA (block_write)
     --make writing immediately available
     POST_SEMA (block_write)
+
+    --create csv file
+    csv_name = FILE_NAME
+    csv__create(csv_name, csv_file)
+    --clear file if exists
+    csv__clear(csv_name, csv_file)
 
     --initialize pipe
     csvpip__constructor(PIPE_NAME, ',', POSITION_HEADER)

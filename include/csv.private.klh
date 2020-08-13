@@ -7,8 +7,7 @@
 %define prog_name_alias csv
 
 -- namespaced members in format <prog_name_alias>__<func_name>
-declare(prog_name,read_types_,prog_name_alias,rdtype_)
-
+declare_function(prog_name,read_types_,prog_name_alias,rdtype_)
 ROUTINE csv__read_types_(file_name : STRING ; fl : FILE;  delimeter : STRING; &
                     typ : INTEGER; real_arr : ARRAY[*] OF REAL; &
                     v : VECTOR; p : XYZWPR) : BOOLEAN FROM csv

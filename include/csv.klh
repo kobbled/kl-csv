@@ -6,47 +6,42 @@
 %define prog_name csv
 %define prog_name_alias csv
 
--- namespaced members in format <prog_name_alias>__<func_name>
 --opts
-declare(prog_name,clear,prog_name_alias,clr)
-declare(prog_name,create,prog_name_alias,create)
---write
-declare(prog_name,write_pipe,prog_name_alias,wrtpipe)
-declare(prog_name,write_to_display,prog_name_alias,wrtdisp)
-declare(prog_name,write_row_val,prog_name_alias,rowvals)
-declare(prog_name,write_row_string,prog_name_alias,rowstr)
-declare(prog_name,write_row_vector,prog_name_alias,rowvec)
-declare(prog_name,write_row_xyzwpr,prog_name_alias,rowpos)
---read
-declare(prog_name,read_open,prog_name_alias,rdopen)
-declare(prog_name,read_close,prog_name_alias,rdclose)
-declare(prog_name,read_line,prog_name_alias,rdline)
-declare(prog_name,read_rarr,prog_name_alias,rdarr)
-declare(prog_name,read_vector,prog_name_alias,rdvec)
-declare(prog_name,read_xyzwpr,prog_name_alias,rdxyz)
-
---opts
+declare_function(prog_name,clear,prog_name_alias,clr)
 ROUTINE csv__clear(filename : STRING; fl : FILE) FROM csv
+declare_function(prog_name,create,prog_name_alias,create)
 ROUTINE csv__create(filename : STRING; fl : FILE) FROM csv
 --writing
+declare_function(prog_name,write_pipe,prog_name_alias,wrtpipe)
 ROUTINE csv__write_pipe(pipname : STRING; pip_fl : FILE;  &
                         filename : STRING; write_fl : FILE) FROM csv
+declare_function(prog_name,write_to_display,prog_name_alias,wrtdisp)
 ROUTINE csv__write_to_display(filename : STRING;  fl : FILE) FROM csv
+declare_function(prog_name,write_row_string,prog_name_alias,rowstr)
 ROUTINE csv__write_row_string(file_name : STRING ; fl : FILE; &
                               delimeter : STRING ; row : ARRAY[*] OF STRING) FROM csv
+declare_function(prog_name,write_row_val,prog_name_alias,rowvals)
 ROUTINE csv__write_row_val(file_name : STRING ; csv_fl : FILE; delimeter : STRING;  &
                            row : ARRAY[*] OF REAL) FROM csv
+declare_function(prog_name,write_row_vector,prog_name_alias,rowvec)
 ROUTINE csv__write_row_vector(file_name : STRING ; csv_fl : FILE; delimeter : STRING; &
                            row : VECTOR) FROM csv
+declare_function(prog_name,write_row_xyzwpr,prog_name_alias,rowpos)
 ROUTINE csv__write_row_xyzwpr(file_name : STRING ; csv_fl : FILE;  delimeter : STRING; &
                            row : XYZWPR) FROM csv
 --reading
+declare_function(prog_name,read_open,prog_name_alias,rdopen)
 ROUTINE csv__read_open(file_name : STRING ; fl : FILE) FROM csv
+declare_function(prog_name,read_close,prog_name_alias,rdclose)
 ROUTINE csv__read_close(fl : FILE) FROM csv
+declare_function(prog_name,read_line,prog_name_alias,rdline)
 ROUTINE csv__read_line(file_name : STRING ; fl : FILE) : STRING FROM csv
+declare_function(prog_name,read_rarr,prog_name_alias,rdarr)
 ROUTINE csv__read_rarr(file_name : STRING ; fl : FILE; delimeter : STRING; &
                        out_arr : ARRAY[*] OF REAL; uninit_arr : ARRAY[*] OF REAL) FROM csv
+declare_function(prog_name,read_vector,prog_name_alias,rdvec)
 ROUTINE csv__read_vector(file_name : STRING ; fl : FILE;  delimeter : STRING; out_v : VECTOR) FROM csv
+declare_function(prog_name,read_xyzwpr,prog_name_alias,rdxyz)
 ROUTINE csv__read_xyzwpr(file_name : STRING ; fl : FILE;  delimeter : STRING; out_p : XYZWPR) FROM csv
 
 %endif --csv_h

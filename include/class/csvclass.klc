@@ -19,36 +19,6 @@ VAR
 %include csvclass.private.klh -- class.klh
 %include csvclass.klh -- class.klh
 
-
---define local classes
--- ********************
---private
-%defeval clear_fieldnames classfunc(crfld)
-%defeval write_fieldnames classfunc(wtfld)
---public
-%defeval constructor classfunc(cntr)
-%defeval destructor classfunc(dsct)
-%defeval clear classfunc(clr)
---getters
-%defeval get_maxlines classfunc(gtmax)
-%defeval get_lines classfunc(gtlns)
---setters
-%defeval set_delimeter classfunc(delim)
-%defeval set_fieldnames classfunc(stfld)
-%defeval set_maxlines classfunc(stlns)
---write
-%defeval write_to_display classfunc(wrdis)
-%defeval write_to_file classfunc(wrfil)
-%defeval write_row_string classfunc(wrstr)
-%defeval write_row_val classfunc(wrrel)
-%defeval write_row_vector classfunc(wrvec)
-%defeval write_row_xyzwpr classfunc(wrpos)
---read
-%defeval read_rarr classfunc(rdarr)
-%defeval read_vector classfunc(rdvc)
-%defeval read_xyzwpr classfunc(rdpos)
--- ********************
-
 --private
 
 ROUTINE clear_fieldnames
@@ -177,12 +147,12 @@ ROUTINE set_maxlines
 --write
 ROUTINE write_to_display
   BEGIN
-    csv__write_to_display(this.filename, csv_file)
+    files__write_to_display(this.filename, csv_file)
   END write_to_display
 
 ROUTINE write_to_file
   BEGIN
-    csv__write_pipe(this.filename, csv_file, filename, fl)
+    files__write_from_pipe(this.filename, csv_file, filename, fl)
   END write_to_file
 
 

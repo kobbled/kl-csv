@@ -2,6 +2,5 @@
 %include namespace.m
 
 -- namespaced members in format <prog_name_alias>__<func_name>
-declare(class_name,clear_fieldnames,class_name,crfld)
-
-ROUTINE classfunc(crfld) FROM class_name
+declare_member(class_name,clear_fieldnames,class_name,crfld)
+ROUTINE clear_fieldnames FROM class_name

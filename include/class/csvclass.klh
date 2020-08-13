@@ -7,56 +7,49 @@
 header_if -- ifndef class
 header_def -- define class
 
--- namespaced members in format <prog_name_alias>__<func_name>
-declare(class_name,constructor,class_name,cntr)
-declare(class_name,destructor,class_name,dsct)
-declare(class_name,clear,class_name,clr)
---getters
-declare(class_name,get_maxlines,class_name,gtmax)
-declare(class_name,get_lines,class_name,gtlns)
---setters
-declare(class_name,set_delimeter,class_name,delim)
-declare(class_name,set_fieldnames,class_name,stfld)
-declare(class_name,set_maxlines,class_name,stlns)
---write
-declare(class_name,write_fieldnames,class_name,wtfld)
-declare(class_name,write_to_display,class_name,wrdis)
-declare(class_name,write_to_file,class_name,wrfil)
-declare(class_name,write_row_string,class_name,wrstr)
-declare(class_name,write_row_val,class_name,wrrel)
-declare(class_name,write_row_vector,class_name,wrvec)
-declare(class_name,write_row_xyzwpr,class_name,wrpos)
---read
-declare(class_name,read_rarr,class_name,rdarr)
-declare(class_name,read_vector,class_name,rdvc)
-declare(class_name,read_xyzwpr,class_name,rdpos)
-
-
-ROUTINE classfunc(cntr) (filename : STRING ; delim : STRING ; header : STRING) FROM class_name
-ROUTINE classfunc(dsct) FROM class_name
-ROUTINE classfunc(clr) FROM class_name
+declare_member(class_name,constructor,class_name,cntr)
+ROUTINE constructor (filename : STRING ; delim : STRING ; header : STRING) FROM class_name
+declare_member(class_name,destructor,class_name,dsct)
+ROUTINE destructor FROM class_name
+declare_member(class_name,clear,class_name,clr)
+ROUTINE clear FROM class_name
 
 --getters
-ROUTINE classfunc(gtmax) : INTEGER FROM class_name
-ROUTINE classfunc(gtlns) : INTEGER FROM class_name
+declare_member(class_name,get_maxlines,class_name,gtmax)
+ROUTINE get_maxlines : INTEGER FROM class_name
+declare_member(class_name,get_lines,class_name,gtlns)
+ROUTINE get_lines : INTEGER FROM class_name
 
 --setters
-ROUTINE classfunc(delim) (delim : STRING) FROM class_name
-ROUTINE classfunc(stfld) (header : STRING) FROM class_name
-ROUTINE classfunc(stlns) (maxlines : INTEGER) FROM class_name
+declare_member(class_name,set_delimeter,class_name,delim)
+ROUTINE set_delimeter (delim : STRING) FROM class_name
+declare_member(class_name,set_fieldnames,class_name,stfld)
+ROUTINE set_fieldnames (header : STRING) FROM class_name
+declare_member(class_name,set_maxlines,class_name,stlns)
+ROUTINE set_maxlines (maxlines : INTEGER) FROM class_name
 
 --write
-ROUTINE classfunc(wtfld) FROM class_name
-ROUTINE classfunc(wrdis) FROM class_name
-ROUTINE classfunc(wrfil) (filename : STRING; fl : FILE) FROM class_name
-ROUTINE classfunc(wrstr) (row : ARRAY[*] OF STRING) FROM class_name
-ROUTINE classfunc(wrrel) (row : ARRAY[*] OF REAL) FROM class_name
-ROUTINE classfunc(wrvec) (row : VECTOR) FROM class_name
-ROUTINE classfunc(wrpos) (row : XYZWPR) FROM class_name
+declare_member(class_name,write_fieldnames,class_name,wtfld)
+ROUTINE write_fieldnames FROM class_name
+declare_member(class_name,write_to_display,class_name,wrdis)
+ROUTINE write_to_display FROM class_name
+declare_member(class_name,write_to_file,class_name,wrfil)
+ROUTINE write_to_file (filename : STRING; fl : FILE) FROM class_name
+declare_member(class_name,write_row_string,class_name,wrstr)
+ROUTINE write_row_string (row : ARRAY[*] OF STRING) FROM class_name
+declare_member(class_name,write_row_val,class_name,wrrel)
+ROUTINE write_row_val (row : ARRAY[*] OF REAL) FROM class_name
+declare_member(class_name,write_row_vector,class_name,wrvec)
+ROUTINE write_row_vector (row : VECTOR) FROM class_name
+declare_member(class_name,write_row_xyzwpr,class_name,wrpos)
+ROUTINE write_row_xyzwpr (row : XYZWPR) FROM class_name
 
 --read
-ROUTINE classfunc(rdarr) (out_arr, uninit_arr : ARRAY[*] OF REAL) FROM class_name
-ROUTINE classfunc(rdvc) (out_v : VECTOR) FROM class_name
-ROUTINE classfunc(rdpos) (out_p : XYZWPR) FROM class_name
+declare_member(class_name,read_rarr,class_name,rdarr)
+ROUTINE read_rarr (out_arr, uninit_arr : ARRAY[*] OF REAL) FROM class_name
+declare_member(class_name,read_vector,class_name,rdvc)
+ROUTINE read_vector (out_v : VECTOR) FROM class_name
+declare_member(class_name,read_xyzwpr,class_name,rdpos)
+ROUTINE read_xyzwpr (out_p : XYZWPR) FROM class_name
 
 %endif --end header

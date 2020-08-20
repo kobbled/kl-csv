@@ -30,7 +30,7 @@ BEGIN
       IF time_out THEN
         GOTO ENDREAD
       ENDIF
-      csvpip__write_to_file(csv_name, csv_file)
+      csvpip__write_to_file(csv_name, csv_file, TRUE)
       csvpip__clear
       POST_SEMA(block_write)
     ENDIF

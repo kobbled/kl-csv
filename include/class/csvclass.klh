@@ -34,7 +34,7 @@ ROUTINE write_fieldnames FROM class_name
 declare_member(class_name,write_to_display,class_name,wrdis)
 ROUTINE write_to_display FROM class_name
 declare_member(class_name,write_to_file,class_name,wrfil)
-ROUTINE write_to_file (filename : STRING; fl : FILE) FROM class_name
+ROUTINE write_to_file (filename : STRING; fl : FILE; handle_file : BOOLEAN) FROM class_name
 declare_member(class_name,write_row_string,class_name,wrstr)
 ROUTINE write_row_string (row : ARRAY[*] OF STRING) FROM class_name
 declare_member(class_name,write_row_val,class_name,wrrel)

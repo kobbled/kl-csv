@@ -69,7 +69,7 @@ ROUTINE csv__create
 
 ROUTINE csv__write_pipe
   BEGIN
-    files__write_from_pipe(pipname, pip_fl, filename, write_fl)
+    files__write_from_pipe(pipname, pip_fl, filename, write_fl, handle_file)
   END csv__write_pipe
 
 ROUTINE csv__write_to_display

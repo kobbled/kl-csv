@@ -39,8 +39,9 @@ BEGIN
     -- create fake work
     DELAY writedelay
   ENDFOR
+
   -- write to display for remainder data
-  csvpip__write_to_file(csv_name, csv_file)
+  csvpip__write_to_file(csv_name, csv_file, TRUE)
   csvpip__clear
 
   ENDWRIT::

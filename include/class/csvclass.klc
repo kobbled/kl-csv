@@ -152,7 +152,7 @@ ROUTINE write_to_display
 
 ROUTINE write_to_file
   BEGIN
-    files__write_from_pipe(this.filename, csv_file, filename, fl)
+    files__write_from_pipe(this.filename, csv_file, filename, fl, handle_file)
   END write_to_file
 
 

@@ -11,6 +11,10 @@ declare_function(prog_name,clear,prog_name_alias,clr)
 ROUTINE csv__clear(filename : STRING; fl : FILE) FROM csv
 declare_function(prog_name,create,prog_name_alias,create)
 ROUTINE csv__create(filename : STRING; fl : FILE) FROM csv
+declare_function(prog_name,open,prog_name_alias,open)
+ROUTINE csv__open(filename : STRING;  access_typ : STRING; fl : FILE) FROM csv
+declare_function(prog_name,close,prog_name_alias,close)
+ROUTINE csv__close(filename : STRING; fl : FILE) FROM csv
 --writing
 declare_function(prog_name,write_pipe,prog_name_alias,wrtpipe)
 ROUTINE csv__write_pipe(pipname : STRING; pip_fl : FILE;  &

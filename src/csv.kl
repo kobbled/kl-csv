@@ -67,6 +67,16 @@ ROUTINE csv__create
     b = files__create(filename, fl)
   END csv__create
 
+ROUTINE csv__open
+  BEGIN
+    files__open(filename, access_typ, fl)
+  END csv__open
+
+ROUTINE csv__close
+  BEGIN
+    files__close(filename, fl)
+  END csv__close
+
 ROUTINE csv__write_pipe
   BEGIN
     files__write_from_pipe(pipname, pip_fl, filename, write_fl, handle_file)

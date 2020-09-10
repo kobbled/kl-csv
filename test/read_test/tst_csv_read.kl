@@ -13,8 +13,8 @@ VAR
 
 %include display.c.klt
 
-%include display.klh
-%include strings.klh
+%from display.klh %import clear, show
+%from strings.klh %import pose_to_s
 %include csv.klh
 
 BEGIN

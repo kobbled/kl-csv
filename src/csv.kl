@@ -9,7 +9,8 @@ VAR
   read_p : XYZWPR
 
 %include errors.klh
-%include strings.klh
+%from strings.klh %import s_to_rarr, s_to_vec, s_to_xyzwpr 
+%from strings.klh %import i_to_s, r_to_s, delim_strip
 %include files.klh
 %include csv.klh
 %include csv.private.klh

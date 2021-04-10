@@ -42,10 +42,10 @@ declare_function(prog_name,read_line,prog_name_alias,rdline)
 ROUTINE csv__read_line(file_name : STRING ; fl : FILE) : STRING FROM csv
 declare_function(prog_name,read_rarr,prog_name_alias,rdarr)
 ROUTINE csv__read_rarr(file_name : STRING ; fl : FILE; delimeter : STRING; &
-                       out_arr : ARRAY[*] OF REAL; uninit_arr : ARRAY[*] OF REAL) FROM csv
+                       out_arr : ARRAY[*] OF REAL; uninit_arr : ARRAY[*] OF REAL) : BOOLEAN FROM csv
 declare_function(prog_name,read_vector,prog_name_alias,rdvec)
-ROUTINE csv__read_vector(file_name : STRING ; fl : FILE;  delimeter : STRING; out_v : VECTOR) FROM csv
+ROUTINE csv__read_vector(file_name : STRING ; fl : FILE;  delimeter : STRING; out_v : VECTOR) : BOOLEAN FROM csv
 declare_function(prog_name,read_xyzwpr,prog_name_alias,rdxyz)
-ROUTINE csv__read_xyzwpr(file_name : STRING ; fl : FILE;  delimeter : STRING; out_p : XYZWPR) FROM csv
+ROUTINE csv__read_xyzwpr(file_name : STRING ; fl : FILE;  delimeter : STRING; out_p : XYZWPR) : BOOLEAN FROM csv
 
 %endif --csv_h

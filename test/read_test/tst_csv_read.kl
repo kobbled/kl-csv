@@ -8,8 +8,8 @@ CONST
 VAR 
   fl : FILE
   pose : XYZWPR
-  read_p FROM csv : XYZWPR --flag needed to tell when EOF is reached
   header : STRING[12]
+  b : BOOLEAN
 
 %include display.c.klt
 
@@ -30,11 +30,11 @@ BEGIN
   WRITE TPDISPLAY(CR,CR)
 
   REPEAT
-    csv__read_xyzwpr(CSV_NAME, fl, ',', pose)
+    b = csv__read_xyzwpr(CSV_NAME, fl, ',', pose)
     WRITE TPDISPLAY(pose_to_s(pose,','),CR)
 
     DELAY SAMPLE_TIME
-  UNTIL(UNINIT(read_p))
+  UNTIL(NOT b)
 
   csv__read_close(fl)
 

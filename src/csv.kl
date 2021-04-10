@@ -182,6 +182,8 @@ ROUTINE csv__read_rarr
     IF NOT s THEN
       out_arr = uninit_arr
     ENDIF
+
+    RETURN(s)
   END csv__read_rarr
 
 
@@ -202,6 +204,8 @@ ROUTINE csv__read_vector
       SET_VAR(entry,'csv','read_v',uninit_v[1],status)
     ENDIF
 
+    RETURN(b)
+
   END csv__read_vector
 
 
@@ -221,6 +225,8 @@ ROUTINE csv__read_xyzwpr
       --set xyzwpr to uninit
       SET_VAR(entry,'csv','read_p',uninit_p[1],status)
     ENDIF
+
+    RETURN(b)
 
   END csv__read_xyzwpr
 

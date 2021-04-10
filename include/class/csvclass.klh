@@ -46,10 +46,10 @@ ROUTINE write_row_xyzwpr (row : XYZWPR) FROM class_name
 
 --read
 declare_member(class_name,read_rarr,class_name,rdarr)
-ROUTINE read_rarr (out_arr, uninit_arr : ARRAY[*] OF REAL) FROM class_name
+ROUTINE read_rarr (out_arr, uninit_arr : ARRAY[*] OF REAL) : BOOLEAN FROM class_name
 declare_member(class_name,read_vector,class_name,rdvc)
-ROUTINE read_vector (out_v : VECTOR) FROM class_name
+ROUTINE read_vector (out_v : VECTOR) : BOOLEAN FROM class_name
 declare_member(class_name,read_xyzwpr,class_name,rdpos)
-ROUTINE read_xyzwpr (out_p : XYZWPR) FROM class_name
+ROUTINE read_xyzwpr (out_p : XYZWPR) : BOOLEAN FROM class_name
 
 %endif --end header

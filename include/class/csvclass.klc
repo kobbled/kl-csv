@@ -196,20 +196,29 @@ ROUTINE write_row_xyzwpr
 --read
 
 ROUTINE read_rarr
+  VAR
+    b : BOOLEAN
   BEGIN
-    csv__read_rarr(this.filename, csv_file, this.delimeter, out_arr, uninit_arr)
+    b = csv__read_rarr(this.filename, csv_file, this.delimeter, out_arr, uninit_arr)
+    RETURN(b)
   END read_rarr
 
 
 ROUTINE read_vector
+  VAR
+    b : BOOLEAN
   BEGIN
-    csv__read_vector(this.filename, csv_file, this.delimeter, out_v)
+    b = csv__read_vector(this.filename, csv_file, this.delimeter, out_v)
+    RETURN(b)
   END read_vector
 
 
 ROUTINE read_xyzwpr
+  VAR
+    b : BOOLEAN
   BEGIN
-    csv__read_xyzwpr(this.filename, csv_file, this.delimeter, out_p)
+    b = csv__read_xyzwpr(this.filename, csv_file, this.delimeter, out_p)
+    RETURN(b)
   END read_xyzwpr
 
 BEGIN

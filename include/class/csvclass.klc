@@ -95,6 +95,16 @@ ROUTINE clear
     this.lines = 0
   END clear
 
+ROUTINE open
+  BEGIN
+    csv__read_open(this.filename, csv_file)
+  END open
+
+ROUTINE close
+  BEGIN
+    csv__read_close(csv_file)
+  END close
+
 
 --getters
 
@@ -194,6 +204,11 @@ ROUTINE write_row_xyzwpr
   END write_row_xyzwpr
 
 --read
+
+ROUTINE read_header
+  BEGIN
+    set_fieldnames(csv__read_line(this.filename, csv_file))
+  END read_header
 
 ROUTINE read_rarr
   VAR

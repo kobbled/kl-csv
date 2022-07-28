@@ -2,6 +2,7 @@ PROGRAM csv
 %NOLOCKGROUP
 
 %include errors.klt
+%include systemlib.c.klt
 %include csv.klt
 
 VAR
@@ -10,7 +11,7 @@ VAR
 
 %include errors.klh
 %from strings.klh %import s_to_rarr, s_to_vec, s_to_xyzwpr 
-%from strings.klh %import i_to_s, r_to_s, delim_strip
+%from strings.klh %import i_to_s, r_to_s, delim_strip, char_count
 %include files.klh
 %include csv.klh
 %include csv.private.klh
@@ -18,41 +19,41 @@ VAR
 
 --private
 
-ROUTINE csv__read_types_
+--use for parsing full csv lines in a number or string array
+ROUTINE csv__read_type_array
   VAR
     str : STRING[127]
+    dummy_typ : t_DATA_TYPE
     success : BOOLEAN
+    count : INTEGER
   BEGIN
     success = FALSE
+
+    --only allow for array types
+    IF (NOT typ = C_INT_ARR) AND (NOT typ = C_REAL_ARR) AND (NOT typ = C_STR_ARR) THEN
+      karelError(INVALID_TYPE_CODE, 'must use an array type in csv__read_type_array.', ER_ABORT)
+    ENDIF
 
     IF (UNINIT(delimeter) OR (delimeter = '')) THEN
       karelError(VAR_UNINIT, 'delimeter not set before read operation', ER_ABORT)
     ENDIF
 
     --read line
-    str = files__read_line(file_name, fl)
+    files__read_line_ref(file_name, fl, str)
+
     --check if readline was successful
     IF ((str = '') OR UNINIT(str) OR (str = 'EOF')) THEN
       RETURN(FALSE)
     ENDIF
 
-    SELECT typ OF
-      CASE(1): --rarr
-        s_to_rarr(str, delimeter, real_arr)
-        success = TRUE
-      CASE(2): --vector
-        v = s_to_vec(str, delimeter)
-        success = TRUE
-      CASE(3): --xyzwpr
-        p = s_to_xyzwpr(str, delimeter)
-        success = TRUE
-      ELSE:
-        karelError(INVALID_TYPE_CODE, 'type not set correctly for private method read_types_', ER_ABORT)
-    ENDSELECT
+    --count number of items in string
+    count = char_count(str, delimeter)
+
+    files__read_type(str, delimeter, 1, count, typ, dummy_typ, real_arr, int_arr, str_arr)
 
     RETURN(success)
     
-  END csv__read_types_
+  END csv__read_type_array
 
 --public
 
@@ -170,6 +171,20 @@ ROUTINE csv__read_line
     --readline if data
     RETURN(files__read_line(file_name, fl))
   END csv__read_line
+
+ROUTINE csv__read_line_ref
+  BEGIN
+    --readline if data
+    files__read_line_ref(file_name, fl, out_str)
+
+    --check if readline was successful
+    IF ((out_str = '') OR UNINIT(out_str) OR (out_str = 'EOF')) THEN
+      RETURN(FALSE)
+    ENDIF
+
+    RETURN(TRUE)
+
+  END csv__read_line_ref
 
 
 ROUTINE csv__read_rarr

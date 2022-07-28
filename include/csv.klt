@@ -15,8 +15,9 @@ TYPE
 		fieldnames : ARRAY[CSV_MAX_COLUMNS] OF STRING[CSV_CELL_LENGTH]
     delimeter : STRING[1]
     columns : INTEGER
-    lines : INTEGER
-    maxlines : INTEGER
+    writeLines : INTEGER
+    readLines : INTEGER
+    maxpipe : INTEGER
 	ENDSTRUCTURE
 
 

@@ -53,7 +53,7 @@ ROUTINE write_fieldnames
     IF (s <> '') THEN
       WRITE csv_file(CR)
     ENDIF
-    this.lines = this.lines + 1
+    this.writeLines = this.writeLines + 1
 
     files__close(this.filename, csv_file)
 
@@ -70,9 +70,10 @@ ROUTINE new
     --set fieldnames
     set_fieldnames(header)
     --reset line count
-    this.lines = 0
+    this.writeLines = 0
+    this.readLines = 0
     --set maximum lines in pipe
-    this.maxlines = 1000
+    this.maxpipe = 1000
 
   END new
 
@@ -85,15 +86,17 @@ ROUTINE delete
     clear_fieldnames
     this.columns = 0
     
-    this.lines = 0
-    this.maxlines = 0
+    this.writeLines = 0
+    this.readLines = 0
+    this.maxpipe = 0
   END delete
 
 
 ROUTINE clear
   BEGIN
     csv__clear(this.filename, csv_file)
-    this.lines = 0
+    this.writeLines = 0
+    this.readLines = 0
   END clear
 
 ROUTINE open
@@ -111,13 +114,18 @@ ROUTINE close
 
 ROUTINE get_maxlines
   BEGIN
-    RETURN(this.maxlines)
+    RETURN(this.maxpipe)
   END get_maxlines
 
-ROUTINE get_lines
+ROUTINE get_lines_written
   BEGIN
-    RETURN(this.lines)
-  END get_lines
+    RETURN(this.writeLines)
+  END get_lines_written
+
+ROUTINE get_lines_read
+  BEGIN
+    RETURN(this.readLines)
+  END get_lines_read
 
 --setters
 
@@ -151,7 +159,7 @@ ROUTINE set_fieldnames
 
 ROUTINE set_maxlines
   BEGIN
-    this.maxlines = maxlines
+    this.maxpipe = maxlines
   END set_maxlines
 
 
@@ -175,7 +183,7 @@ ROUTINE write_row_string
     ENDIF
 
     csv__write_row_string(this.filename, csv_file, this.delimeter, row)
-    this.lines = this.lines + 1
+    this.writeLines = this.writeLines + 1
   END write_row_string
 
 
@@ -188,20 +196,20 @@ ROUTINE write_row_val
 
     csv__write_row_val(this.filename, csv_file, this.delimeter, row)
     
-    this.lines = this.lines + 1
+    this.writeLines = this.writeLines + 1
   END write_row_val
 
 
 ROUTINE write_row_vector
   BEGIN
     csv__write_row_vector(this.filename, csv_file, this.delimeter, row)
-    this.lines = this.lines + 1
+    this.writeLines = this.writeLines + 1
   END write_row_vector
 
 ROUTINE write_row_xyzwpr
   BEGIN
     csv__write_row_xyzwpr(this.filename, csv_file, this.delimeter, row)
-    this.lines = this.lines + 1
+    this.writeLines = this.writeLines + 1
   END write_row_xyzwpr
 
 --read
@@ -209,6 +217,7 @@ ROUTINE write_row_xyzwpr
 ROUTINE read_header
   BEGIN
     set_fieldnames(csv__read_line(this.filename, csv_file))
+    this.readLines = this.readLines + 1
   END read_header
 
 ROUTINE read_rarr

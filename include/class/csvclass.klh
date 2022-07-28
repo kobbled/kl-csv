@@ -21,8 +21,10 @@ ROUTINE close FROM class_name
 --getters
 declare_member(class_name,get_maxlines,class_name,gtmax)
 ROUTINE get_maxlines : INTEGER FROM class_name
-declare_member(class_name,get_lines,class_name,gtlns)
-ROUTINE get_lines : INTEGER FROM class_name
+declare_member(class_name,get_lines_written,class_name,gtwln)
+ROUTINE get_lines_written : INTEGER FROM class_name
+declare_member(class_name,get_lines_read,class_name,gtrln)
+ROUTINE get_lines_read : INTEGER FROM class_name
 
 --setters
 declare_member(class_name,set_delimeter,class_name,delim)

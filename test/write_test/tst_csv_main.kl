@@ -28,11 +28,11 @@ VAR
 
 BEGIN
     --set number of write operations
-    entries = 20
+    entries = 30
     --set max wait time for read task
-    waitime = 5000
+    waitime = 2000
     --time between write operations
-    writedelay = 1000
+    writedelay = 100
 
     --set semaphore
     block_write = 1
@@ -47,11 +47,11 @@ BEGIN
     csv__clear(csv_name, csv_file)
 
     --initialize pipe
-    csvpip__set_maxlines(MAXLINES)
     tstcsv__new(PIPE_NAME, ',', POSITION_HEADER)
+    tstcsv__set_maxlines(MAXLINES)
 
     --write feildnames
-    csvpip__write_fieldnames
+    tstcsv__write_fieldnames
 
     -- start reader
     strt = task__thread('tst_csv_writ')

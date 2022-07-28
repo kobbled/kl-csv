@@ -1,4 +1,4 @@
-PROGRAM tst_csv_read
+PROGRAM tst_csv_rdln
 %NOLOCKGROUP
 
 CONST
@@ -9,12 +9,13 @@ VAR
   fl : FILE
   pose : XYZWPR
   header : STRING[12]
+  str : STRING[64]
   b : BOOLEAN
 
 %include display.c.klt
 
 %from display.klh %import clear, show
-%from strings.klh %import pose_to_s
+%from strings.klh %import pose_to_s, s_to_xyzwpr
 %include csv.klh
 
 BEGIN
@@ -30,8 +31,12 @@ BEGIN
   WRITE TPDISPLAY(CR,CR)
 
   REPEAT
-    b = csv__read_xyzwpr(CSV_NAME, fl, ',', pose)
-    WRITE TPDISPLAY(pose_to_s(pose,','),CR)
+    b = csv__read_line_ref(CSV_NAME, fl, str)
+    IF b THEN
+      pose = s_to_xyzwpr(str, ',')
+
+      WRITE TPDISPLAY(pose_to_s(pose,','),CR)
+    ENDIF
 
     DELAY SAMPLE_TIME
   UNTIL(NOT b)
@@ -40,4 +45,4 @@ BEGIN
 
   WRITE TPDISPLAY('Read finished!',CR)
 
-END tst_csv_read
+END tst_csv_rdln

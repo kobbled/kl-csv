@@ -25,13 +25,17 @@ BEGIN
   display__show
   
   WHILE(TRUE) DO
-    IF csvpip__get_lines >= csvpip__get_maxlines THEN
+    IF tstcsv__get_lines_written >= tstcsv__get_maxlines THEN
       PEND_SEMA(block_write, waitime, time_out)
+
+      WRITE TPDISPLAY(CR,'Flushing pipe!')
+
       IF time_out THEN
         GOTO ENDREAD
       ENDIF
-      csvpip__write_to_file(csv_name, csv_file, TRUE)
-      csvpip__clear
+      -- (name, file, handle open/close)
+      tstcsv__write_to_file(csv_name, csv_file, TRUE)
+      tstcsv__clear
       POST_SEMA(block_write)
     ENDIF
     DELAY 100

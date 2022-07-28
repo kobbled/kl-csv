@@ -28,11 +28,13 @@ BEGIN
     IF time_out THEN
       GOTO ENDWRIT
     ENDIF
+    
+    WRITE TPDISPLAY(CR,'writing pos...')
     --create random initial position
     tme = GET_USEC_TIM
     pose = math__rand_position(tme)
     --write pose to csv pipe
-    csvpip__write_row_xyzwpr(pose)
+    tstcsv__write_row_xyzwpr(pose)
     
     POST_SEMA (block_write)
 
@@ -41,8 +43,9 @@ BEGIN
   ENDFOR
 
   -- write to display for remainder data
-  csvpip__write_to_file(csv_name, csv_file, TRUE)
-  csvpip__clear
+  -- (name, file, handle open/close)
+  tstcsv__write_to_file(csv_name, csv_file, TRUE)
+  tstcsv__clear
 
   ENDWRIT::
   WRITE TPDISPLAY(CR,'csv write is done.')

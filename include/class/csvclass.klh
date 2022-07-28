@@ -7,10 +7,10 @@
 header_if -- ifndef class
 header_def -- define class
 
-declare_member(class_name,constructor,class_name,cntr)
-ROUTINE constructor (filename : STRING ; delim : STRING ; header : STRING) FROM class_name
-declare_member(class_name,destructor,class_name,dsct)
-ROUTINE destructor FROM class_name
+declare_member(class_name,new,class_name,new)
+ROUTINE new (filename : STRING ; delim : STRING ; header : STRING) FROM class_name
+declare_member(class_name,delete,class_name,del)
+ROUTINE delete FROM class_name
 declare_member(class_name,clear,class_name,clr)
 ROUTINE clear FROM class_name
 declare_member(class_name,open,class_name,open)

@@ -16,7 +16,7 @@ VAR
 %include csv.klh
 
 -- sensor csv file
-%class csvpip('csvclass.klc','csvclass.klh')
+%class tstcsv('csvclass.klc','csvclass.klh')
 
 BEGIN
   --clear display

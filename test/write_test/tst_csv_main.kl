@@ -24,7 +24,7 @@ VAR
 %include csv.klh
 
 -- sensor csv file
-%class csvpip('csvclass.klc','csvclass.klh')
+%class tstcsv('csvclass.klc','csvclass.klh')
 
 BEGIN
     --set number of write operations
@@ -47,8 +47,8 @@ BEGIN
     csv__clear(csv_name, csv_file)
 
     --initialize pipe
-    csvpip__constructor(PIPE_NAME, ',', POSITION_HEADER)
     csvpip__set_maxlines(MAXLINES)
+    tstcsv__new(PIPE_NAME, ',', POSITION_HEADER)
 
     --write feildnames
     csvpip__write_fieldnames
@@ -75,6 +75,6 @@ BEGIN
     done = task__abort('tst_csv_writ')
     WRITE TPDISPLAY(CR,'csv read is done.')
 
-    csvpip__destructor
+    tstcsv__delete
 
 END tst_csv_main

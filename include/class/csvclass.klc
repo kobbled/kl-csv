@@ -5,6 +5,7 @@ PROGRAM class_name
 %include namespace.m
 
 %include errors.klt
+%include systemlib.c.klt
 %include csv.klt
 
 VAR
@@ -60,7 +61,7 @@ ROUTINE write_fieldnames
 
 --public
 
-ROUTINE constructor
+ROUTINE new
   BEGIN
     --set filename
     this.filename = filename
@@ -73,10 +74,10 @@ ROUTINE constructor
     --set maximum lines in pipe
     this.maxlines = 1000
 
-  END constructor
+  END new
 
 
-ROUTINE destructor
+ROUTINE delete
   BEGIN
     this.filename = ''
     this.delimeter = ''
@@ -86,7 +87,7 @@ ROUTINE destructor
     
     this.lines = 0
     this.maxlines = 0
-  END destructor
+  END delete
 
 
 ROUTINE clear

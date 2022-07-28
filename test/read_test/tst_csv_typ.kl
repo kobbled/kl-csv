@@ -1,0 +1,110 @@
+PROGRAM tst_csv_typ
+%NOLOCKGROUP
+
+CONST
+  PIPE_NAME = 'PIP:TESTCSV.DAT'
+  FILE_NAME = 'FR:read_typ_data.csv'
+  OUTPUT_NAME = 'FR:test_out.csv'
+  PIPE_SIZE = 20
+
+TYPE
+  t_TESTTYPE = STRUCTURE
+    layer : INTEGER
+    code : INTEGER
+    depth : REAL
+    pose : XYZWPR
+    rotary : REAL
+  ENDSTRUCTURE
+
+VAR
+  i : INTEGER
+  b, b2 : BOOLEAN
+  out_fl : FILE
+  str : STRING[127]
+  ndes : PATH nodedata = t_TESTTYPE
+  status : INTEGER
+
+%include display.klh
+%include csv.klh
+
+-- read file
+%class tstcsv('csvclass.klc','csvclass.klh')
+
+-- pipe file
+%class tstpip('csvclass.klc','csvclass.klh')
+
+ROUTINE clear_nodes
+  VAR
+    i : INTEGER
+    status : INTEGER
+  BEGIN
+    i = PATH_LEN(ndes)
+    WHILE PATH_LEN(ndes) > 0 DO
+		  DELETE_NODE(ndes,i,status)
+      i = i - 1
+	  ENDWHILE
+  END clear_nodes
+
+BEGIN
+  --clear display
+  display__clear
+  --show display
+  display__show
+
+  clear_nodes
+
+  --load read file
+  tstcsv__new(FILE_NAME, ',', '')
+  tstcsv__open
+  tstcsv__read_header
+
+  --start pipe
+  tstpip__new(PIPE_NAME, ',', tstcsv__get_fieldnames)
+  tstpip__clear
+
+  --read lines into pipe
+  i = 1
+  REPEAT
+    --read from file
+    b = tstcsv__read_line
+    IF b THEN
+      --write into pipe
+      tstpip__write_string(tstcsv__get_line)
+    ENDIF
+    
+    i = i + 1
+  UNTIL((NOT b) OR (i > PIPE_SIZE))
+
+  tstcsv__close
+
+  --read all lines written to the pipe
+  --and store in a user defined list struct
+  tstpip__open
+  i = 1
+  REPEAT
+     --make node
+    b2 = tstpip__read_line
+    IF b2 THEN
+      APPEND_NODE(ndes,status)
+      ndes[i].layer = tstpip__read_int(1)
+      ndes[i].code = tstpip__read_int(2)
+      ndes[i].depth = tstpip__read_real(3)
+      ndes[i].pose = tstpip__read_xyzwpr(4)
+      ndes[i].rotary = tstpip__read_real(10)
+    ENDIF
+    
+    i = i + 1
+  UNTIL(NOT b2)
+  tstpip__close
+
+  --create output file
+  csv__create(OUTPUT_NAME, out_fl)
+
+  --write pipe to the output file
+  -- (name, file, handle open/close)
+  tstpip__write_to_file(OUTPUT_NAME, out_fl, TRUE)
+  
+  -- tstcsv__delete
+  -- tstpip__delete
+
+END tst_csv_typ

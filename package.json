@@ -13,6 +13,7 @@
     "test/write_test/tst_csv_pipe.kl",
     "test/write_test/tst_csv_writ.kl",
     "test/read_test/tst_csv_rdln.kl",
+    "test/read_test/tst_csv_typ.kl",
     "test/read_test/read_data.csv",
     "test/read_test/read_typ_data.csv"
   ],

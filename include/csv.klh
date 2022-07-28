@@ -21,6 +21,8 @@ ROUTINE csv__write_pipe(pipname : STRING; pip_fl : FILE;  &
                         filename : STRING; write_fl : FILE; handle_file : BOOLEAN) FROM csv
 declare_function(prog_name,write_to_display,prog_name_alias,wrtdisp)
 ROUTINE csv__write_to_display(filename : STRING;  fl : FILE) FROM csv
+declare_function(prog_name,write_string,prog_name_alias,wrtstr)
+ROUTINE csv__write_string(file_name : STRING ; fl : FILE; str : STRING) FROM csv
 declare_function(prog_name,write_row_string,prog_name_alias,rowstr)
 ROUTINE csv__write_row_string(file_name : STRING ; fl : FILE; &
                               delimeter : STRING ; row : ARRAY[*] OF STRING) FROM csv

@@ -89,6 +89,12 @@ ROUTINE csv__write_to_display
     files__write_to_display(filename, fl)
   END csv__write_to_display
 
+ROUTINE csv__write_string
+  BEGIN
+    -- write to file
+    files__write(str, file_name, fl)
+  END csv__write_string
+
 ROUTINE csv__write_row_string
   VAR
     i : INTEGER

@@ -341,12 +341,65 @@ ROUTINE read_sarr
     ENDIF
   END read_sarr
 
+ROUTINE read_int
+  VAR
+    i : ARRAY[1] OF INTEGER
+    r : ARRAY[1] OF REAL
+    s : ARRAY[1] OF STRING[1]
+  BEGIN
+    files__read_type(line, this.delimeter, offset, 1, C_INT, data, r, i, s)
+    RETURN(data.int)
+  END read_int
+
+ROUTINE read_real
+  VAR
+    i : ARRAY[1] OF INTEGER
+    r : ARRAY[1] OF REAL
+    s : ARRAY[1] OF STRING[1]
+  BEGIN
+    files__read_type(line, this.delimeter, offset, 1, C_REAL, data, r, i, s)
+    RETURN(data.rl)
+  END read_real
+
+ROUTINE read_string
+  VAR
+    i : ARRAY[1] OF INTEGER
+    r : ARRAY[1] OF REAL
+    s : ARRAY[1] OF STRING[1]
+  BEGIN
+    files__read_type(line, this.delimeter, offset, 1, C_STR, data, r, i, s)
+    RETURN(data.str)
+  END read_string
+
+ROUTINE read_bool
+  VAR
+    i : ARRAY[1] OF INTEGER
+    r : ARRAY[1] OF REAL
+    s : ARRAY[1] OF STRING[1]
+  BEGIN
+    files__read_type(line, this.delimeter, offset, 1, C_STR, data, r, i, s)
+    RETURN(data.bool)
+  END read_bool
+
+
+ROUTINE read_vector
+  VAR
+    i : ARRAY[1] OF INTEGER
+    r : ARRAY[1] OF REAL
+    s : ARRAY[1] OF STRING[1]
+  BEGIN
+    files__read_type(line, this.delimeter, offset, 1, C_VEC, data, r, i, s)
+    RETURN(data.vec)
+  END read_vector
+
 ROUTINE read_xyzwpr
   VAR
-    b : BOOLEAN
+    i : ARRAY[1] OF INTEGER
+    r : ARRAY[1] OF REAL
+    s : ARRAY[1] OF STRING[1]
   BEGIN
-    b = csv__read_xyzwpr(this.filename, csv_file, this.delimeter, out_p)
-    RETURN(b)
+    files__read_type(line, this.delimeter, offset, 1, C_POS, data, r, i, s)
+    RETURN(data.pos)
   END read_xyzwpr
 
 BEGIN

@@ -71,9 +71,16 @@ ROUTINE read_iarr (offset : INTEGER; size : INTEGER; out_arr : ARRAY[*] OF INTEG
 declare_member(class_name,read_sarr,class_name,sdarr)
 ROUTINE read_sarr (offset : INTEGER; size : INTEGER; out_arr : ARRAY[*] OF STRING) FROM class_name
 declare_member(class_name,read_int,class_name,rint)
+ROUTINE read_int(offset : INTEGER) : INTEGER FROM class_name
+declare_member(class_name,read_real,class_name,rrel)
+ROUTINE read_real(offset : INTEGER) : REAL FROM class_name
+declare_member(class_name,read_string,class_name,rstr)
+ROUTINE read_string(offset : INTEGER) : STRING FROM class_name
+declare_member(class_name,read_bool,class_name,rbol)
+ROUTINE read_bool(offset : INTEGER) : BOOLEAN FROM class_name
 declare_member(class_name,read_vector,class_name,rdvc)
-ROUTINE read_vector (out_v : VECTOR) : BOOLEAN FROM class_name
+ROUTINE read_vector(offset : INTEGER) : VECTOR FROM class_name
 declare_member(class_name,read_xyzwpr,class_name,rdpos)
-ROUTINE read_xyzwpr (out_p : XYZWPR) : BOOLEAN FROM class_name
+ROUTINE read_xyzwpr(offset : INTEGER) : XYZWPR FROM class_name
 
 %endif --end header

@@ -19,6 +19,12 @@ declare_member(class_name,close,class_name,close)
 ROUTINE close FROM class_name
 
 --getters
+declare_member(class_name,get_filename,class_name,gtfln)
+ROUTINE get_filename : STRING FROM class_name
+declare_member(class_name,get_line,class_name,gtlin)
+ROUTINE get_line : STRING FROM class_name
+declare_member(class_name,get_fieldnames,class_name,gtfld)
+ROUTINE get_fieldnames : STRING FROM class_name
 declare_member(class_name,get_maxlines,class_name,gtmax)
 ROUTINE get_maxlines : INTEGER FROM class_name
 declare_member(class_name,get_lines_written,class_name,gtwln)
@@ -41,6 +47,8 @@ declare_member(class_name,write_to_display,class_name,wrdis)
 ROUTINE write_to_display FROM class_name
 declare_member(class_name,write_to_file,class_name,wrfil)
 ROUTINE write_to_file (filename : STRING; fl : FILE; handle_file : BOOLEAN) FROM class_name
+declare_member(class_name,write_string,class_name,wstrg)
+ROUTINE write_string (str : STRING) FROM class_name
 declare_member(class_name,write_row_string,class_name,wrstr)
 ROUTINE write_row_string (row : ARRAY[*] OF STRING) FROM class_name
 declare_member(class_name,write_row_val,class_name,wrrel)
@@ -53,6 +61,8 @@ ROUTINE write_row_xyzwpr (row : XYZWPR) FROM class_name
 --read
 declare_member(class_name,read_header,class_name,rhdr)
 ROUTINE read_header FROM class_name
+declare_member(class_name,read_line,class_name,rdlne)
+ROUTINE read_line : BOOLEAN FROM class_name
 declare_member(class_name,read_rarr,class_name,rdarr)
 ROUTINE read_rarr (out_arr, uninit_arr : ARRAY[*] OF REAL) : BOOLEAN FROM class_name
 declare_member(class_name,read_vector,class_name,rdvc)

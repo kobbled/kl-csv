@@ -4,6 +4,7 @@
 %define CSV_MAX_COLUMNS 12
 %define CSV_CELL_LENGTH 16
 
+%define CSV_LINE_CHAR_LENGTH 127
 
 %define CARTESIAN_HEADER 'x,y,z'
 %define CYLINDRICAL_HEADER 'theta,z,r'

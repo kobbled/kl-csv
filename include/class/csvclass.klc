@@ -10,6 +10,7 @@ PROGRAM class_name
 
 VAR
     this : CSV_STRUCT
+    line  : STRING[CSV_LINE_CHAR_LENGTH]
     csv_file : FILE
 
 %include errors.klh
@@ -125,6 +126,20 @@ ROUTINE close
 
 
 --getters
+ROUTINE get_filename
+  BEGIN
+    RETURN(this.filename)
+  END get_filename
+
+ROUTINE get_line
+  BEGIN
+    RETURN(line)
+  END get_line
+
+ROUTINE get_fieldnames
+  BEGIN
+    RETURN(sarr_to_s(this.fieldnames, this.delimeter) )
+  END get_fieldnames
 
 ROUTINE get_maxlines
   BEGIN
@@ -157,6 +172,8 @@ ROUTINE set_fieldnames
     i : INTEGER
     c : INTEGER
   BEGIN
+    --get rid of trailing ,'s
+    header = rstripChar(header, this.delimeter)
     --clear fieldnames
     clear_fieldnames
     --split header against delimeter
@@ -187,6 +204,16 @@ ROUTINE write_to_file
   BEGIN
     files__write_from_pipe(this.filename, csv_file, filename, fl, handle_file)
   END write_to_file
+
+ROUTINE write_string
+  BEGIN
+    --make sure file is closed before appending to it
+    files__close(this.filename, csv_file)
+
+    -- append to file
+    files__write(str, this.filename, csv_file)
+    this.writeLines = this.writeLines + 1
+  END write_string
 
 
 ROUTINE write_row_string
@@ -233,6 +260,22 @@ ROUTINE read_header
     set_fieldnames(csv__read_line(this.filename, csv_file))
     this.readLines = this.readLines + 1
   END read_header
+
+ROUTINE read_line
+  BEGIN
+    --readline if data
+    --files__read_line_ref(this.filename, csv_file, line)
+    line = files__read_line(this.filename, csv_file)
+
+    --check if readline was successful
+    IF ((line = '') OR UNINIT(line) OR (line = 'EOF')) THEN
+      RETURN(FALSE)
+    ENDIF
+
+    this.readLines = this.readLines + 1
+    RETURN(TRUE)
+
+  END read_line
 
 ROUTINE read_rarr
   VAR

@@ -63,8 +63,14 @@ declare_member(class_name,read_header,class_name,rhdr)
 ROUTINE read_header FROM class_name
 declare_member(class_name,read_line,class_name,rdlne)
 ROUTINE read_line : BOOLEAN FROM class_name
+  -- ..warning:: required to call `read_line` first, then the type function
 declare_member(class_name,read_rarr,class_name,rdarr)
-ROUTINE read_rarr (out_arr, uninit_arr : ARRAY[*] OF REAL) : BOOLEAN FROM class_name
+ROUTINE read_rarr (offset : INTEGER; size : INTEGER; out_arr : ARRAY[*] OF REAL) FROM class_name
+declare_member(class_name,read_iarr,class_name,idarr)
+ROUTINE read_iarr (offset : INTEGER; size : INTEGER; out_arr : ARRAY[*] OF INTEGER) FROM class_name
+declare_member(class_name,read_sarr,class_name,sdarr)
+ROUTINE read_sarr (offset : INTEGER; size : INTEGER; out_arr : ARRAY[*] OF STRING) FROM class_name
+declare_member(class_name,read_int,class_name,rint)
 declare_member(class_name,read_vector,class_name,rdvc)
 ROUTINE read_vector (out_v : VECTOR) : BOOLEAN FROM class_name
 declare_member(class_name,read_xyzwpr,class_name,rdpos)

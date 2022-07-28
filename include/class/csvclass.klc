@@ -11,6 +11,7 @@ PROGRAM class_name
 VAR
     this : CSV_STRUCT
     line  : STRING[CSV_LINE_CHAR_LENGTH]
+    data : t_DATA_TYPE
     csv_file : FILE
 
 %include errors.klh
@@ -279,21 +280,66 @@ ROUTINE read_line
 
 ROUTINE read_rarr
   VAR
+    i : ARRAY[1] OF INTEGER
+    s : ARRAY[1] OF STRING[1]
     b : BOOLEAN
   BEGIN
-    b = csv__read_rarr(this.filename, csv_file, this.delimeter, out_arr, uninit_arr)
-    RETURN(b)
+
+    b = check_read
+
+    IF b THEN
+      --count number of items in string
+      -- if size isn't set use full string
+      IF size = 0 THEN
+        --count the number of items in the string
+        size = char_count(line, this.delimeter)
+      ENDIF
+
+      files__read_type(line, this.delimeter, offset, size, C_REAL_ARR, data, out_arr, i, s)
+    ENDIF
   END read_rarr
 
-
-ROUTINE read_vector
+ROUTINE read_iarr
   VAR
+    r : ARRAY[1] OF REAL
+    s : ARRAY[1] OF STRING[1]
     b : BOOLEAN
   BEGIN
-    b = csv__read_vector(this.filename, csv_file, this.delimeter, out_v)
-    RETURN(b)
-  END read_vector
 
+    b = check_read
+
+    IF b THEN
+      --count number of items in string
+      -- if size isn't set use full string
+      IF size = 0 THEN
+        --count the number of items in the string
+        size = char_count(line, this.delimeter)
+      ENDIF
+
+      files__read_type(line, this.delimeter, offset, size, C_INT_ARR, data, r, out_arr, s)
+    ENDIF
+  END read_iarr
+
+ROUTINE read_sarr
+  VAR
+    r : ARRAY[1] OF REAL
+    i : ARRAY[1] OF INTEGER
+    b : BOOLEAN
+  BEGIN
+
+    b = check_read
+
+    IF b THEN
+      --count number of items in string
+      -- if size isn't set use full string
+      IF size = 0 THEN
+        --count the number of items in the string
+        size = char_count(line, this.delimeter)
+      ENDIF
+
+      files__read_type(line, this.delimeter, offset, size, C_STR_ARR, data, r, i, out_arr)
+    ENDIF
+  END read_sarr
 
 ROUTINE read_xyzwpr
   VAR

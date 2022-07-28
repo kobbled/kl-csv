@@ -189,61 +189,45 @@ ROUTINE csv__read_line_ref
 
 ROUTINE csv__read_rarr
   VAR
-    v : VECTOR
-    p : XYZWPR
-    s : BOOLEAN
+    success : BOOLEAN
+    i : ARRAY[1] OF INTEGER
+    s : ARRAY[1] OF STRING[1]
   BEGIN
-    s = csv__read_types_(file_name, fl, delimeter, 1, out_arr, v, p)
-    IF NOT s THEN
+    success = csv__read_type_array(file_name, fl, delimeter, C_REAL_ARR, out_arr, i, s)
+    IF NOT success THEN
       out_arr = uninit_arr
     ENDIF
 
-    RETURN(s)
+    RETURN(success)
   END csv__read_rarr
 
-
-ROUTINE csv__read_vector
+ROUTINE csv__read_iarr
   VAR
+    success : BOOLEAN
     r : ARRAY[1] OF REAL
-    p : XYZWPR
-    uninit_v : ARRAY[1] OF VECTOR
-    entry : INTEGER
-    status: INTEGER
-    b : BOOLEAN
-   BEGIN
-    b = csv__read_types_(file_name, fl, delimeter, 2, r, out_v, p)
-    --use flag to tell parent task if EOF or an error has been reached
-    read_v = out_v
-    IF NOT b THEN
-      --set vector to uninit
-      SET_VAR(entry,'csv','read_v',uninit_v[1],status)
-    ENDIF
-
-    RETURN(b)
-
-  END csv__read_vector
-
-
-ROUTINE csv__read_xyzwpr
-  VAR
-    r : ARRAY[1] OF REAL
-    uninit_p : ARRAY[1] OF XYZWPR
-    v : VECTOR
-    entry : INTEGER
-    status: INTEGER
-    b : BOOLEAN
+    s : ARRAY[1] OF STRING[1]
   BEGIN
-    b = csv__read_types_(file_name, fl, delimeter, 3, r, v, out_p)
-    --use flag to tell parent task if EOF or an error has been reached
-    read_p = out_p
-    IF NOT b THEN
-      --set xyzwpr to uninit
-      SET_VAR(entry,'csv','read_p',uninit_p[1],status)
+    success = csv__read_type_array(file_name, fl, delimeter, C_INT_ARR, r, out_arr, s)
+    IF NOT success THEN
+      out_arr = uninit_arr
     ENDIF
 
-    RETURN(b)
+    RETURN(success)
+  END csv__read_iarr
 
-  END csv__read_xyzwpr
+ROUTINE csv__read_sarr
+  VAR
+    success : BOOLEAN
+    r : ARRAY[1] OF REAL
+    i : ARRAY[1] OF INTEGER
+  BEGIN
+    success = csv__read_type_array(file_name, fl, delimeter, C_INT_ARR, r, i, out_arr)
+    IF NOT success THEN
+      out_arr = uninit_arr
+    ENDIF
+
+    RETURN(success)
+  END csv__read_sarr
 
 
 BEGIN

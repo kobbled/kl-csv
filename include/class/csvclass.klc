@@ -59,6 +59,20 @@ ROUTINE write_fieldnames
 
   END write_fieldnames
 
+ROUTINE check_read
+  BEGIN
+    IF (UNINIT(line) OR (line = '') OR (line = 'EOF')) THEN
+      karelError(VAR_UNINIT, 'Need to call read_line on csv first!', ER_WARN)
+      RETURN(FALSE)
+    ENDIF
+
+    IF (UNINIT(this.delimeter) OR (this.delimeter = '')) THEN
+      karelError(VAR_UNINIT, 'delimeter not set before read operation', ER_ABORT)
+    ENDIF
+
+    RETURN(TRUE)
+  END check_read
+
 --public
 
 ROUTINE new

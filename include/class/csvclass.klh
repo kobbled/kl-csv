@@ -17,6 +17,12 @@ declare_member(class_name,open,class_name,open)
 ROUTINE open FROM class_name
 declare_member(class_name,close,class_name,close)
 ROUTINE close FROM class_name
+declare_member(class_name,isopen,class_name,isopn)
+ROUTINE isopen FROM class_name
+declare_member(class_name,isclosed,class_name,iscls)
+ROUTINE isclosed FROM class_name
+declare_member(class_name,check_read,class_name,chkrd)
+ROUTINE check_read : BOOLEAN FROM class_name
 
 --getters
 declare_member(class_name,get_filename,class_name,gtfln)

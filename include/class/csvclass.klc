@@ -125,6 +125,15 @@ ROUTINE close
     csv__read_close(csv_file)
   END close
 
+ROUTINE isopen
+  BEGIN
+    files__check_open(this.filename, csv_file)
+  END isopen
+
+ROUTINE isclosed
+  BEGIN
+    files__check_closed(this.filename, csv_file)
+  END isclosed
 
 --getters
 ROUTINE get_filename

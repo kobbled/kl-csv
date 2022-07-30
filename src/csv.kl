@@ -162,6 +162,7 @@ ROUTINE csv__write_row_xyzwpr
 
 ROUTINE csv__read_open
   BEGIN
+    CLR_IO_STAT(fl)
     OPEN FILE fl ('RO', file_name)
   END csv__read_open
 

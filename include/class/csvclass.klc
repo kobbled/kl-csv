@@ -64,7 +64,7 @@ ROUTINE write_fieldnames
 ROUTINE check_read
   BEGIN
     IF (UNINIT(line) OR (line = '') OR (line = 'EOF')) THEN
-      karelError(VAR_UNINIT, 'Need to call read_line on csv first!', ER_WARN)
+      --karelError(VAR_UNINIT, 'Need to call read_line on csv first!', ER_WARN)
       RETURN(FALSE)
     ENDIF
 
@@ -156,6 +156,27 @@ ROUTINE get_lines_read
   BEGIN
     RETURN(this.readLines)
   END get_lines_read
+
+ROUTINE copy_data
+  VAR
+    data_copy : t_DATA_TYPE
+  BEGIN
+    IF (NOT UNINIT(data.int)) THEN data_copy.int = (data.int); ENDIF
+    IF (NOT UNINIT(data.rl)) THEN data_copy.rl = (data.rl); ENDIF
+    IF (NOT UNINIT(data.str)) THEN data_copy.str = (data.str); ENDIF
+    IF (NOT UNINIT(data.bool)) THEN data_copy.bool = (data.bool); ENDIF
+    IF (NOT UNINIT(data.vec)) THEN data_copy.vec = (data.vec); ENDIF
+    IF (NOT UNINIT(data.pos)) THEN data_copy.pos = (data.pos); ENDIF
+    IF (NOT UNINIT(data.posext)) THEN data_copy.posext = (data.posext); ENDIF
+    IF (NOT UNINIT(data.cnfg)) THEN data_copy.cnfg = (data.cnfg); ENDIF
+
+    RETURN(data_copy)
+  END copy_data
+
+ROUTINE get_data
+  BEGIN
+    RETURN(data)
+  END get_data
 
 --setters
 

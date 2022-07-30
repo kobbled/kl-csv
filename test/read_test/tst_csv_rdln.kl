@@ -13,6 +13,7 @@ VAR
   b : BOOLEAN
 
 %include display.c.klt
+%include systemlib.c.klt
 
 %from display.klh %import clear, show
 %from strings.klh %import pose_to_s, s_to_xyzwpr

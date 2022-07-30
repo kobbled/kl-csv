@@ -12,6 +12,8 @@ VAR
   i, tme : INTEGER
   time_out : BOOLEAN
 
+%include systemlib.c.klt
+
 %include math.klh
 %include csv.klh
 

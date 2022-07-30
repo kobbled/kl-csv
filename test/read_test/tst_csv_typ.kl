@@ -1,6 +1,8 @@
 PROGRAM tst_csv_typ
 %NOLOCKGROUP
 
+%include systemlib.c.klt
+
 CONST
   PIPE_NAME = 'PIP:TESTCSV.DAT'
   FILE_NAME = 'FR:read_typ_data.csv'

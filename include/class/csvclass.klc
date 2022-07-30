@@ -423,5 +423,16 @@ ROUTINE read_xyzwpr
     RETURN(data.pos)
   END read_xyzwpr
 
+ROUTINE read_data
+  VAR
+    i : ARRAY[1] OF INTEGER
+    r : ARRAY[1] OF REAL
+    s : ARRAY[1] OF STRING[1]
+  BEGIN
+    --..warning:: Assumes friends relationship with this class and the
+    --            "data" attribute.
+    files__read_type(line, split, offset, 1, typ, data, r, i, s)
+  END read_data
+
 BEGIN
 END class_name

@@ -86,5 +86,7 @@ declare_member(class_name,read_vector,class_name,rdvc)
 ROUTINE read_vector(offset : INTEGER) : VECTOR FROM class_name
 declare_member(class_name,read_xyzwpr,class_name,rdpos)
 ROUTINE read_xyzwpr(offset : INTEGER) : XYZWPR FROM class_name
+declare_member(class_name,read_data,class_name,rddat)
+ROUTINE read_data(offset : INTEGER; typ : INTEGER; split : STRING) FROM class_name
 
 %endif --end header

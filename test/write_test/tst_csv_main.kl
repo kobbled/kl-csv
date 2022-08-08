@@ -19,7 +19,8 @@ VAR
 
 %include errors.klt
 %include csv.klt
-%include systemlib.c.klt
+%include systemlib.codes.klt
+%include systemlib.datatypes.klt
 
 %include multitask.klh
 %include errors.klh

@@ -1,7 +1,8 @@
 PROGRAM tst_csv_typ
 %NOLOCKGROUP
 
-%include systemlib.c.klt
+%include systemlib.codes.klt
+%include systemlib.datatypes.klt
 
 CONST
   PIPE_NAME = 'PIP:TESTCSV.DAT'

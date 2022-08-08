@@ -11,7 +11,8 @@ VAR
   time_out : BOOLEAN
 
 %include display.c.klt
-%include systemlib.c.klt
+%include systemlib.codes.klt
+%include systemlib.datatypes.klt
 
 %include display.klh
 %include csv.klh

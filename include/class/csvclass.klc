@@ -5,7 +5,8 @@ PROGRAM class_name
 %include namespace.m
 
 %include errors.klt
-%include systemlib.c.klt
+%include systemlib.codes.klt
+%include systemlib.datatypes.klt
 %include csv.klt
 
 VAR

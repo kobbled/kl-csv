@@ -67,6 +67,7 @@ BEGIN
 
   --read lines into pipe
   i = 1
+  tstpip__open_append
   REPEAT
     --read from file
     b = tstcsv__read_line
@@ -77,6 +78,7 @@ BEGIN
     
     i = i + 1
   UNTIL((NOT b) OR (i > PIPE_SIZE))
+  tstpip__close
 
   tstcsv__close
 

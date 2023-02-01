@@ -16,6 +16,8 @@ ROUTINE csv__open(filename : STRING;  access_typ : STRING; fl : FILE) FROM csv
 declare_function(prog_name,close,prog_name_alias,close)
 ROUTINE csv__close(filename : STRING; fl : FILE) FROM csv
 --writing
+declare_function(prog_name,append_open,prog_name_alias,apopen)
+ROUTINE csv__append_open(file_name : STRING ; fl : FILE) FROM csv
 declare_function(prog_name,write_pipe,prog_name_alias,wrtpipe)
 ROUTINE csv__write_pipe(pipname : STRING; pip_fl : FILE;  &
                         filename : STRING; write_fl : FILE; handle_file : BOOLEAN) FROM csv

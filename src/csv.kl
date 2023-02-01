@@ -80,6 +80,12 @@ ROUTINE csv__close
     files__close(filename, fl)
   END csv__close
 
+ROUTINE csv__append_open
+  BEGIN
+    CLR_IO_STAT(fl)
+    OPEN FILE fl ('AP', file_name)
+  END csv__append_open
+
 ROUTINE csv__write_pipe
   BEGIN
     files__write_from_pipe(pipname, pip_fl, filename, write_fl, handle_file)

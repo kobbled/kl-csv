@@ -254,9 +254,6 @@ ROUTINE write_to_file
 
 ROUTINE write_string
   BEGIN
-    --make sure file is closed before appending to it
-    files__close(this.filename, csv_file)
-
     -- append to file
     files__write(str, this.filename, csv_file)
     this.writeLines = this.writeLines + 1

@@ -126,6 +126,11 @@ ROUTINE open_append
     csv__append_open(this.filename, csv_file)
   END open_append
 
+ROUTINE open_read
+  BEGIN
+    csv__read_open(this.filename, csv_file)
+  END open_read
+
 ROUTINE close
   BEGIN
     csv__read_close(csv_file)

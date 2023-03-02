@@ -15,6 +15,8 @@ declare_member(class_name,clear,class_name,clr)
 ROUTINE clear FROM class_name
 declare_member(class_name,open,class_name,open)
 ROUTINE open FROM class_name
+declare_member(class_name,open_read,class_name,oprd)
+ROUTINE open_read FROM class_name
 declare_member(class_name,open_append,class_name,opap)
 ROUTINE open_append FROM class_name
 declare_member(class_name,close,class_name,close)

@@ -118,7 +118,7 @@ ROUTINE clear
 
 ROUTINE open
   BEGIN
-    csv__open(this.filename, 'RW', csv_file)
+    csv__open(this.filename, 'RO', csv_file)
   END open
 
 ROUTINE open_append
@@ -130,6 +130,11 @@ ROUTINE open_read
   BEGIN
     csv__read_open(this.filename, csv_file)
   END open_read
+
+ROUTINE open_write
+  BEGIN
+    csv__read_open(this.filename, csv_file)
+  END open_write
 
 ROUTINE close
   BEGIN

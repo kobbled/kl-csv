@@ -19,6 +19,8 @@ declare_member(class_name,open_read,class_name,oprd)
 ROUTINE open_read FROM class_name
 declare_member(class_name,open_append,class_name,opap)
 ROUTINE open_append FROM class_name
+declare_member(class_name,open_write,class_name,oprw)
+ROUTINE open_write FROM class_name
 declare_member(class_name,close,class_name,close)
 ROUTINE close FROM class_name
 declare_member(class_name,isopen,class_name,isopn)

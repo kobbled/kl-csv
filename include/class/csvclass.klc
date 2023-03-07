@@ -255,7 +255,7 @@ ROUTINE write_to_file
 ROUTINE write_string
   BEGIN
     -- append to file
-    files__write(str, this.filename, csv_file)
+    files__write_line(str, this.filename, csv_file)
     this.writeLines = this.writeLines + 1
   END write_string
 

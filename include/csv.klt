@@ -8,6 +8,7 @@
 
 %define CARTESIAN_HEADER 'x,y,z'
 %define CYLINDRICAL_HEADER 'theta,z,r'
+%define CYLINDRICAL_SCANNING_HEADER 'theta,r,z'
 %define POSITION_HEADER 'x,y,z,w,p,r'
 
 TYPE
